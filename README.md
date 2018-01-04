@@ -2,7 +2,7 @@
 
 This widget shows currently played song in either iTunes or Spotify. It has a spiffy progress bar, shows pretty artwork (external dependency: pretty artwork) and has a ton of customization options.
 
-## [Download Playbox](https://github.com/melchor629/Playbox.widget/raw/master/Playbox.widget.zip)
+## [Download Playbox][1]
 
 # Features
 
@@ -44,6 +44,10 @@ Here's how you can set all the widget's options. Open `index.coffee` and look at
   stickInCorner: false                  # true | false
 ```
 
-## [Download Playbox](https://github.com/melchor629/Playbox.widget/raw/master/Playbox.widget.zip)
+## [Download Playbox][1]
 
-Fork of [Pe8er/Playbox.widget](https://github.com/Pe8er/Playbox.widget)
+Fork of [Pe8er/Playbox.widget][2]
+
+
+  [1]: https://github.com/melchor629/Playbox.widget/releases/download/latest/Playbox.widget.zip
+  [2]: https://github.com/Pe8er/Playbox.widget
