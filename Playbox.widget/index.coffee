@@ -1,11 +1,13 @@
 # Code originally created by the awesome members of Ubersicht community.
 # I stole from so many I can't remember who you are, thank you so much everyone!
 # Haphazardly adjusted and mangled by Pe8er (https://github.com/Pe8er)
+# Forked by melchor629 (https://github.com/melchor629)
 
 options =
   # Choose where the widget should sit on your screen.
   verticalPosition    : "bottom"        # top | bottom | center
   horizontalPosition    : "left"        # left | right | center
+  margin: "80px"                        # Sets a margin at the `verticalPosition'
 
   # Choose widget size.
   widgetVariant: "large"                # large | medium | small
@@ -19,7 +21,7 @@ options =
   # Stick the widget in the corner? Set to *true* if you're using it with Sidebar widget, set to *false* if you'd like to give it some breathing room and a drop shadow.
   stickInCorner: false                  # true | false
 
-command: "osascript 'Playbox.widget/lib/Get Current Track.applescript'"
+command: "Playbox.widget/lib/getcurrenttrack.sh"
 refreshFrequency: '1s'
 
 style: """
@@ -34,6 +36,8 @@ style: """
     fColor = black
     bgColor = white
     bgBrightness = 120%
+  
+  cursor: default !important
 
   // Specify color palette and blur properties.
 
@@ -66,7 +70,7 @@ style: """
     top 50%
     transform translateY(-50%)
   else
-    #{options.verticalPosition} margin
+    #{options.verticalPosition} #{options.margin} + margin
   if #{options.horizontalPosition} == center
     left 50%
     transform translateX(-50%)
@@ -82,7 +86,7 @@ style: """
   position absolute
   transform-style preserve-3d
   -webkit-transform translate3d(0px, 0px, 0px)
-  mainDimension = 176px
+  mainDimension = 270px //176 original
   width auto
   min-width 200px
   max-width mainDimension
@@ -128,6 +132,7 @@ style: """
     bottom 0
     left 0
     z-index 4
+    transition: width .3s ease
 
   .wrapper, .album, .artist, .song
     overflow hidden
@@ -186,6 +191,12 @@ style: """
       float none
       text-align center
       max-width (mainDimension * Scale) - 20
+      opacity: 0
+      transition opacity .5s .5s ease
+
+    .wrapper:hover .text, .text.show
+      opacity: 1
+      transition opacity .25s ease
 
     if #{options.metaPosition} == outside
       .progress
@@ -201,8 +212,7 @@ style: """
         overflow hidden
 
       .text
-        // Blurred background is turned off because of insane WebKit glitches :(
-        //-webkit-backdrop-filter blurProperties
+        -webkit-backdrop-filter blurProperties
         position absolute
         bottom 0
         left 0
@@ -240,17 +250,22 @@ afterRender: (domEl) ->
     div.css('left', (screen.width - div.width())/2)
 
   if @options.metaPosition is 'inside' and @options.widgetVariant isnt 'small'
-    meta.delay(3000).fadeOut(500)
+    @showMeta div
 
-    div.click(
-      =>
-        meta.stop(true,false).fadeIn(250).delay(3000).fadeOut(500)
-        if @options.stickInCorner is false
-          div.stop(true,true).animate({zoom: '0.99', boxShadow: '0 0 2px rgba(0,0,0,1.0)'}, 200, 'swing')
-          div.stop(true,true).animate({zoom: '1.0', boxShadow: '0 20px 40px 0px rgba(0,0,0,0.6)'}, 300, 'swing')
-          # div.find('.wrapper').stop(true,true).addClass('pushed')
-          # div.find('.wrapper').stop(true,true).removeClass('pushed')
-    )
+    div.click =>
+      if @options.stickInCorner is false
+        div.stop(true,true).animate({zoom: '0.99', boxShadow: '0 0 2px rgba(0,0,0,1.0)'}, 200, 'swing')
+        div.stop(true,true).animate({zoom: '1.0', boxShadow: '0 20px 40px 0px rgba(0,0,0,0.6)'}, 300, 'swing')
+
+showMeta: (div) ->
+  meta = div.find('.text')
+  meta.addClass('show')
+  if @_metaTimeout
+    clearTimeout @_metaTimeout
+  @_metaTimeout = setTimeout =>
+    meta.removeClass('show')
+    @_metaTimeout = null
+  , 3000
 
 # Update the rendered output.
 update: (output, domEl) ->
@@ -261,60 +276,38 @@ update: (output, domEl) ->
   if !output
     div.animate({opacity: 0}, 250, 'swing').hide(1)
   else
-    values = output.slice(0,-1).split(" @ ")
-    div.find('.artist').html(values[0])
-    div.find('.song').html(values[1])
-    div.find('.album').html(values[2])
-    tDuration = values[3]
-    tPosition = values[4]
-    tArtwork = values[5]
-    songChanged = values[6]
-    isLoved = values[7]
+    values = JSON.parse(output)
+    if not values.isPlaying
+      return div.animate({opacity: 0}, 250, 'swing').hide(1)
+
+    div.find('.artist').html(values.artistName)
+    div.find('.song').html(values.songName)
+    div.find('.album').html(values.albumName)
+    tDuration = values.songDuration
+    tPosition = values.currentPosition
+    tArtwork = values.coverUrl
+    songChanged = values.songChanged
+    isLoved = values.isLoved
     currArt = "/" + div.find('.art').css('background-image').split('/').slice(-3).join().replace(/\,/g, '/').slice(0,-1)
     tWidth = div.width()
     tCurrent = (tPosition / tDuration) * tWidth
     div.find('.progress').css width: tCurrent
-    # console.log(tArtwork + ", " + currArt)
 
     div.show(1).animate({opacity: 1}, 250, 'swing')
 
-    if currArt isnt tArtwork and tArtwork isnt 'NA'
+    if currArt isnt tArtwork and tArtwork
       artwork = div.find('.art')
       artwork.css('background-image', 'url('+tArtwork+')')
-
-      # console.log("Changed to: " + tArtwork)
-
-      # Trying to fade the artwork on load, failing so far.
-      # if songChanged is 'true'
-        # artwork.fadeIn(100)
-        # artwork.
-        # artwork.fadeIn(500)
-
-      # artwork = div.find('.art')
-      # img = new Image
-      # img.onload = ->
-      #   artwork.css
-      #     'background-image': 'url(' + tArtwork + ')'
-      #     'background-size': 'contain'
-      #   artwork.fadeIn 300
-      #   return
-
-      # img.src = tArtwork
-      # return
-    else if tArtwork is 'NA'
+    else if not tArtwork
       artwork = div.find('.art')
       artwork.css('background-image', 'url(/Playbox.widget/lib/default.png)')
 
-    if songChanged is 'true' and @options.metaPosition is 'inside' and @options.widgetVariant isnt 'small'
-      div.find('.text').fadeIn(250).delay(3000).fadeOut(500)
+    if songChanged and @options.metaPosition is 'inside' and @options.widgetVariant isnt 'small'
+      @showMeta div
 
-    if isLoved is 'true'
+    if isLoved
       div.find('.heart').show()
     else
       div.find('.heart').hide()
 
   div.css('max-width', screen.width)
-
-  # Sort out flex-box positioning.
-  # div.parent('div').css('order', '9')
-  # div.parent('div').css('flex', '0 1 auto')

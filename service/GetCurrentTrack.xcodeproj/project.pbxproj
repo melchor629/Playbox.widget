@@ -1,0 +1,334 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4804FD241FFE61C000819901 /* GetCurrentTrackApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */; };
+		485716781FFC2A9C00C2AE7F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 485716771FFC2A9C00C2AE7F /* main.m */; };
+		485716801FFC2D8500C2AE7F /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4857167F1FFC2D8500C2AE7F /* ScriptingBridge.framework */; };
+		485716891FFC306B00C2AE7F /* SpotifyPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 485716881FFC306B00C2AE7F /* SpotifyPlayer.m */; };
+		4857168C1FFC4BC100C2AE7F /* iTunesPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4857168B1FFC4BC100C2AE7F /* iTunesPlayer.m */; };
+		4857168F1FFC549100C2AE7F /* VOXPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4857168E1FFC549100C2AE7F /* VOXPlayer.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		485716721FFC2A9C00C2AE7F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		4804FD221FFE61C000819901 /* GetCurrentTrackApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetCurrentTrackApp.h; sourceTree = "<group>"; };
+		4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GetCurrentTrackApp.m; sourceTree = "<group>"; };
+		485716741FFC2A9C00C2AE7F /* GetCurrentTrack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GetCurrentTrack; sourceTree = BUILT_PRODUCTS_DIR; };
+		485716771FFC2A9C00C2AE7F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4857167F1FFC2D8500C2AE7F /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
+		485716811FFC2E3500C2AE7F /* VOX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VOX.h; sourceTree = "<group>"; };
+		485716821FFC2E3500C2AE7F /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
+		485716831FFC2E3500C2AE7F /* Spotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Spotify.h; sourceTree = "<group>"; };
+		485716861FFC2EC900C2AE7F /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		485716871FFC306B00C2AE7F /* SpotifyPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpotifyPlayer.h; sourceTree = "<group>"; };
+		485716881FFC306B00C2AE7F /* SpotifyPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpotifyPlayer.m; sourceTree = "<group>"; };
+		4857168A1FFC4BC100C2AE7F /* iTunesPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iTunesPlayer.h; sourceTree = "<group>"; };
+		4857168B1FFC4BC100C2AE7F /* iTunesPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTunesPlayer.m; sourceTree = "<group>"; };
+		4857168D1FFC549100C2AE7F /* VOXPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VOXPlayer.h; sourceTree = "<group>"; };
+		4857168E1FFC549100C2AE7F /* VOXPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VOXPlayer.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		485716711FFC2A9C00C2AE7F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				485716801FFC2D8500C2AE7F /* ScriptingBridge.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4857166B1FFC2A9B00C2AE7F = {
+			isa = PBXGroup;
+			children = (
+				485716761FFC2A9C00C2AE7F /* GetCurrentTrack */,
+				485716751FFC2A9C00C2AE7F /* Products */,
+				4857167E1FFC2D8500C2AE7F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		485716751FFC2A9C00C2AE7F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				485716741FFC2A9C00C2AE7F /* GetCurrentTrack */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		485716761FFC2A9C00C2AE7F /* GetCurrentTrack */ = {
+			isa = PBXGroup;
+			children = (
+				485716851FFC2E9800C2AE7F /* Players */,
+				485716841FFC2E5300C2AE7F /* ScriptingBridgeHeaders */,
+				485716771FFC2A9C00C2AE7F /* main.m */,
+				4804FD221FFE61C000819901 /* GetCurrentTrackApp.h */,
+				4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */,
+			);
+			path = GetCurrentTrack;
+			sourceTree = "<group>";
+		};
+		4857167E1FFC2D8500C2AE7F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4857167F1FFC2D8500C2AE7F /* ScriptingBridge.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		485716841FFC2E5300C2AE7F /* ScriptingBridgeHeaders */ = {
+			isa = PBXGroup;
+			children = (
+				485716821FFC2E3500C2AE7F /* iTunes.h */,
+				485716831FFC2E3500C2AE7F /* Spotify.h */,
+				485716811FFC2E3500C2AE7F /* VOX.h */,
+			);
+			path = ScriptingBridgeHeaders;
+			sourceTree = "<group>";
+		};
+		485716851FFC2E9800C2AE7F /* Players */ = {
+			isa = PBXGroup;
+			children = (
+				485716861FFC2EC900C2AE7F /* Player.h */,
+				485716871FFC306B00C2AE7F /* SpotifyPlayer.h */,
+				485716881FFC306B00C2AE7F /* SpotifyPlayer.m */,
+				4857168A1FFC4BC100C2AE7F /* iTunesPlayer.h */,
+				4857168B1FFC4BC100C2AE7F /* iTunesPlayer.m */,
+				4857168D1FFC549100C2AE7F /* VOXPlayer.h */,
+				4857168E1FFC549100C2AE7F /* VOXPlayer.m */,
+			);
+			path = Players;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		485716731FFC2A9C00C2AE7F /* GetCurrentTrack */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4857167B1FFC2A9C00C2AE7F /* Build configuration list for PBXNativeTarget "GetCurrentTrack" */;
+			buildPhases = (
+				485716701FFC2A9C00C2AE7F /* Sources */,
+				485716711FFC2A9C00C2AE7F /* Frameworks */,
+				485716721FFC2A9C00C2AE7F /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GetCurrentTrack;
+			productName = GetCurrentTrack;
+			productReference = 485716741FFC2A9C00C2AE7F /* GetCurrentTrack */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4857166C1FFC2A9B00C2AE7F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = "Melchor Garau Madrigal";
+				TargetAttributes = {
+					485716731FFC2A9C00C2AE7F = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 4857166F1FFC2A9B00C2AE7F /* Build configuration list for PBXProject "GetCurrentTrack" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4857166B1FFC2A9B00C2AE7F;
+			productRefGroup = 485716751FFC2A9C00C2AE7F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				485716731FFC2A9C00C2AE7F /* GetCurrentTrack */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		485716701FFC2A9C00C2AE7F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4857168F1FFC549100C2AE7F /* VOXPlayer.m in Sources */,
+				485716781FFC2A9C00C2AE7F /* main.m in Sources */,
+				4857168C1FFC4BC100C2AE7F /* iTunesPlayer.m in Sources */,
+				4804FD241FFE61C000819901 /* GetCurrentTrackApp.m in Sources */,
+				485716891FFC306B00C2AE7F /* SpotifyPlayer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		485716791FFC2A9C00C2AE7F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4857167A1FFC2A9C00C2AE7F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		4857167C1FFC2A9C00C2AE7F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		4857167D1FFC2A9C00C2AE7F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4857166F1FFC2A9B00C2AE7F /* Build configuration list for PBXProject "GetCurrentTrack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				485716791FFC2A9C00C2AE7F /* Debug */,
+				4857167A1FFC2A9C00C2AE7F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4857167B1FFC2A9C00C2AE7F /* Build configuration list for PBXNativeTarget "GetCurrentTrack" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4857167C1FFC2A9C00C2AE7F /* Debug */,
+				4857167D1FFC2A9C00C2AE7F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4857166C1FFC2A9B00C2AE7F /* Project object */;
+}

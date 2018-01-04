@@ -2,34 +2,34 @@
 
 This widget shows currently played song in either iTunes or Spotify. It has a spiffy progress bar, shows pretty artwork (external dependency: pretty artwork) and has a ton of customization options.
 
-## [Download Playbox](https://github.com/Pe8er/Playbox.widget/raw/master/Playbox.widget.zip)
+## [Download Playbox](https://github.com/melchor629/Playbox.widget/raw/master/Playbox.widget.zip)
 
 # Features
 
-<img src="https://github.com/Pe8er/Playbox.widget/blob/master/screenshot.jpg" width="516" height="320">
+<img src="https://github.com/melchor629/Playbox.widget/blob/master/screenshot.jpg" width="516" height="320">
 
-- Supports both Spotify and iTunes.
-- Shows artwork (courtesy of [last.fm](http://www.last.fm) or local artwork for iTunes songs).
+- Supports Spotify, iTunes and VOX.
+- Shows artwork (from your song metadata).
 - Song progress bar.
 - Three size variants.
 - 🔥 Dark and light themes.
 - 🔥 Position song metadata inside or outside the artwork.
-- 🔥 If song meta is inside the artwork, it fades out automatically. Click the artwork to show it again.
+- 🔥 If song meta is inside the artwork, it fades out automatically. Click the artwork to show it again. Reapears with the mouse over it!
 - Easy way to toggle the widget's visibility.
 - Easy way to position the widget on the screen.
 - Spiffy fade animations all over the place.
+- Uses less CPU than original.
+- Uses a background service to detect song information. [See more](https://github.com/melchor629/Playbox.widget/blob/master/service/README.md)
 
 # Options
 
 Here's how you can set all the widget's options. Open `index.coffee` and look at the very top of the document:
 
 ```coffeescript
-  # Enable or disable the widget.
-  widgetEnable : true                   # true | false
-
   # Choose where the widget should sit on your screen.
   verticalPosition    : "bottom"        # top | bottom | center
   horizontalPosition    : "left"        # left | right | center
+  margin: "80px"                        # Sets a margin at the `verticalPosition'
 
   # Choose widget size.
   widgetVariant: "large"                # large | medium | small
@@ -44,6 +44,6 @@ Here's how you can set all the widget's options. Open `index.coffee` and look at
   stickInCorner: false                  # true | false
 ```
 
-## [Download Playbox](https://github.com/Pe8er/Playbox.widget/raw/master/Playbox.widget.zip)
+## [Download Playbox](https://github.com/melchor629/Playbox.widget/raw/master/Playbox.widget.zip)
 
-[See my other widgets &rarr;](https://github.com/Pe8er/Ubersicht-Widgets)
+Fork of [Pe8er/Playbox.widget](https://github.com/Pe8er/Playbox.widget)
