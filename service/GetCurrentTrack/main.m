@@ -34,12 +34,12 @@ static void interruption(int signo) {
     notInterrupted = true;
 }
 
-static void run(void) {
+static void run(bool daemonized) {
     @autoreleasepool {
         signal(SIGINT, interruption);
         signal(SIGTERM, interruption);
         GetCurrentTrackApp* app = [[GetCurrentTrackApp alloc] init];
-        [app loop];
+        [app loop: daemonized];
         [app cleanup];
     }
 }
@@ -83,7 +83,7 @@ int main(int argc, const char * argv[]) {
 
     if(should_daemonize) daemonize();
 
-    run();
+    run(should_daemonize);
 
     return 0;
 }

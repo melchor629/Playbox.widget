@@ -25,6 +25,5 @@ else
     wait_daemon
 fi
 
-echo > /tmp/get_current_track
-cat < /tmp/get_current_track
+curl localhost:45987 2>/dev/null
 

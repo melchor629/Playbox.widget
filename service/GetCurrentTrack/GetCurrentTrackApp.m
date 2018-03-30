@@ -12,6 +12,9 @@
 #import "Players/iTunesPlayer.h"
 #import "Players/VOXPlayer.h"
 
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <string.h>
@@ -109,29 +112,37 @@ NSString* getBaseDirectory(NSString* extra);
     }
 }
 
-- (void) loop {
-    checc(mkfifo("/tmp/get_current_track", 0666), "Cannot create FIFO");
-    int pipe;
-    checc(pipe = open("/tmp/get_current_track", O_RDONLY), "Cannot open FIFO");
+- (void) loop: (bool) daemonized {
+    int sock = socket(PF_INET6, SOCK_STREAM, 0);
+
+    int opt = 1; //Avoid "Address already in use" error
+    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char*) &opt, sizeof(opt));
+
+    struct sockaddr_in6 addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin6_family = AF_INET6;
+    struct in6_addr a = IN6ADDR_LOOPBACK_INIT;
+    memcpy(&addr.sin6_addr, &a, sizeof(addr.sin6_addr));
+    addr.sin6_port = htons(daemonized ? 45987 : 45988);
+    checc(bind(sock, (struct sockaddr*) &addr, sizeof(addr)), "Cannot bind to tcp://[::]:45987");
+
+    listen(sock, 10);
+
     while(!notInterrupted) {
-        char buf[1000];
-        ssize_t e;
-        checc(e = read(pipe, buf, sizeof(buf)), "Cannot read from FIFO");
-        close(pipe);
-        //NSLog(@"Received request");
-        if(e != -1) {
-            checc(pipe = open("/tmp/get_current_track", O_WRONLY), "Cannot open FIFO for writing");
+        int client;
+        checc(client = accept(sock, NULL, NULL), "Cannot accept a client :(");
+        @autoreleasepool {
             Player* player = [self getPlayingPlayer];
             [self checkForChanges: player];
             NSData* data = nil;
             if(player != nil) {
                 id dict = @{
-                            @"artistName": last.artistName,
-                            @"songName": last.songName,
-                            @"albumName": last.albumName,
+                            @"artistName": [last.artistName length] == 0 ? [NSNull null] : last.artistName,
+                            @"songName": [last.songName length] == 0 ? [NSNull null] : last.songName,
+                            @"albumName": [last.albumName length] == 0 ? [NSNull null] : last.albumName,
                             @"songDuration": [NSNumber numberWithUnsignedInteger:last.songDuration],
                             @"currentPosition": [NSNumber numberWithUnsignedInteger:last.currentPosition],
-                            @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : nil,
+                            @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : [NSNull null],
                             @"songChanged": [NSNumber numberWithBool:songChanged],
                             @"isLoved": [NSNumber numberWithBool:last.isLoved],
                             @"isPlaying": [NSNumber numberWithBool:true],
@@ -141,19 +152,22 @@ NSString* getBaseDirectory(NSString* extra);
             } else {
                 data = [NSJSONSerialization dataWithJSONObject:@{@"isPlaying": [NSNumber numberWithBool:false]} options:0 error:nil];
             }
+            const char headers[] =
+                "HTTP/1.1 200 OK\r\n"
+                "Content-Type: application/json; encoding=utf-8\r\n"
+                "\r\n";
+            write(client, headers, sizeof(headers) - 1);
             ssize_t written = 0;
             const void* outData = [data bytes];
             size_t outLen = [data length];
             while(written < outLen) {
-                written += write(pipe, outData + written, outLen - written);
+                written += write(client, outData + written, outLen - written);
             }
-            //NSLog(@"Send response: %.*s", (int) outLen, outData);
-            close(pipe);
+            shutdown(client, SHUT_RDWR);
+            close(client);
         }
-        checc(pipe = open("/tmp/get_current_track", O_RDONLY), "Cannot reopen FIFO for reading");
     }
-    close(pipe);
-    checc(unlink("/tmp/get_current_track"), "Cannot delete FIFO");
+    close(sock);
 }
 
 - (void) cleanup {

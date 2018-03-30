@@ -10,7 +10,7 @@
 
 @interface GetCurrentTrackApp : NSObject
 
-- (void) loop;
+- (void) loop: (bool) daemonized;
 - (void) cleanup;
 
 @end
