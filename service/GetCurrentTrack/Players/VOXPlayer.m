@@ -22,7 +22,7 @@ NSString* getBaseDirectory(NSString* extra);
 }
 
 - (bool) isPlaying {
-    return [app isRunning] && [app playerState] == 1;
+    return isRunning(@"com.coppertino.Vox") && [app isRunning] && [app playerState] == 1;
 }
 
 - (SongMetadata*) getMetadata {
@@ -42,7 +42,12 @@ NSString* getBaseDirectory(NSString* extra);
 - (NSString*) getCover {
     NSData* rawData = [[app artworkImage] TIFFRepresentation];
     if(rawData != nil) {
-        NSUInteger hash = [[app album] hash];
+        NSUInteger hash;
+        if([app album] != nil) {
+            hash = [[app album] hash];
+        } else {
+            hash = [[NSString stringWithFormat:@"%@::%@", [app artist], [app name]] hash];
+        }
         NSString* path = [NSString stringWithFormat:@"%@/Playbox.widget/lib/cover%lx.tiff", getBaseDirectory(nil), hash];
         FILE* file = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
         fwrite([rawData bytes], [rawData length], 1, file);

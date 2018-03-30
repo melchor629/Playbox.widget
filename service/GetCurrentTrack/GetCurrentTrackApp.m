@@ -73,16 +73,27 @@ NSString* getBaseDirectory(NSString* extra);
     return nil;
 }
 
+bool areEqualsWithNil(NSString* a, NSString* b) {
+    if(a == nil && b != nil) return false;
+    if(a != nil && b == nil) return false;
+    if(a == nil && b == nil) return true;
+    return [a isEqualToString:b];
+}
+
 - (bool) didSongChange: (SongMetadata*) current {
     return !(
-             [current.artistName isEqualToString:last.artistName] &&
-             [current.songName isEqualToString:last.songName] &&
-             [current.albumName isEqualToString:last.albumName]
+             areEqualsWithNil(current.artistName, last.artistName) &&
+             areEqualsWithNil(current.songName, last.songName) &&
+             areEqualsWithNil(current.albumName, last.albumName)
              );
 }
 
 - (bool) didCoverChange: (SongMetadata*) current {
-    return !([current.artistName isEqualToString:last.artistName] && [current.albumName isEqualToString:last.albumName]);
+    if(current.albumName != nil) {
+        return !(areEqualsWithNil(current.artistName, last.artistName) && areEqualsWithNil(current.albumName, last.albumName));
+    } else {
+        return true;
+    }
 }
 
 - (void) checkForChanges: (Player*) player {

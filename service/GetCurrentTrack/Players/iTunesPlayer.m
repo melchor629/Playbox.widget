@@ -22,7 +22,7 @@ NSString* getBaseDirectory(NSString* extra);
 }
 
 - (bool) isPlaying {
-    return [app isRunning] && [app playerState] == iTunesEPlSPlaying;
+    return isRunning(@"com.apple.iTunes") && [app isRunning] && [app playerState] == iTunesEPlSPlaying;
 }
 
 - (SongMetadata*) getMetadata {
@@ -51,7 +51,12 @@ NSString* getBaseDirectory(NSString* extra);
         else if(!strcmp("GNP", extData)) ext = "png";
         else if(!strcmp("FFIT", extData)) ext = "tiff";
         NSData* rawData = [artwork rawData];
-        NSUInteger hash = [[currentTrack album] hash];
+        NSUInteger hash;
+        if([currentTrack album] != nil) {
+            hash = [[currentTrack album] hash];
+        } else {
+            hash = [[NSString stringWithFormat:@"%@::%@", [currentTrack artist], [currentTrack name]] hash];
+        }
         NSString* path = [NSString stringWithFormat:@"%@/Playbox.widget/lib/cover%lx.%s", getBaseDirectory(nil), hash, ext];
         FILE* file = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
         fwrite([rawData bytes], [rawData length], 1, file);

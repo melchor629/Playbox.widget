@@ -20,7 +20,7 @@
 }
 
 - (bool) isPlaying {
-    return [app isRunning] && [app playerState] == SpotifyEPlSPlaying;
+    return isRunning(@"com.spotify.client") && [app isRunning] && [app playerState] == SpotifyEPlSPlaying;
 }
 
 - (SongMetadata*) getMetadata {

@@ -30,6 +30,13 @@
 @end
 
 /*!
+ * Checks whether if an app with bundle identifier <pre>bundleId</pre>
+ * is running.
+ * @return <pre>true</pre> if it is running
+ **/
+bool isRunning(NSString* bundleId);
+
+/*!
  * Base class for a Player interface. Allows the service to
  * ask the needed information to a player.
  **/

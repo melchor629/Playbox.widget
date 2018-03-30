@@ -6,7 +6,7 @@
 //  Copyright © 2018 Melchor Garau Madrigal. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 #import "GetCurrentTrackApp.h"
 
 #include <stdio.h>
@@ -21,6 +21,13 @@ NSString* getBaseDirectory(NSString* extra) {
     NSString* nscwd = [NSString stringWithUTF8String:cwd];
     free(cwd);
     return extra ? [NSString stringWithFormat:@"%@/%@", nscwd, extra] : nscwd;
+}
+
+bool isRunning(NSString* bundleId) {
+    NSPredicate* predicate = [NSPredicate predicateWithBlock:^BOOL(NSRunningApplication* evaluatedObject, NSDictionary* bindings) {
+        return [[evaluatedObject bundleIdentifier] isEqualToString:bundleId];
+    }];
+    return 0 < [[[[NSWorkspace sharedWorkspace] runningApplications] filteredArrayUsingPredicate: predicate] count];
 }
 
 #define checc(v, msg) { \
@@ -65,7 +72,6 @@ static void daemonize(void) {
         checc(pid, "Could not create the daemon (2)");
         exit(EXIT_FAILURE);
     } else if(pid > 0) {
-        NSLog(@"Daemonized GetCurrentTrack");
         //Child must exist right now
         exit(EXIT_SUCCESS);
     }
