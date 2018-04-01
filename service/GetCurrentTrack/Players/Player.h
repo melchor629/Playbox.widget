@@ -58,9 +58,10 @@ bool isRunning(NSString* bundleId);
  * with its current working directory (gained from <code>NSString* getBaseDirectory(NSString* extra);</code>
  * in it, or return a URL to an image.
  * @discussion If this method returns a path to a file, the file will be deleted in the future.
+ * @param basePath The base path where the file must be placed
  * @return A path or an URL to an image
  **/
-- (NSString*) getCover;
+- (NSString*) getCover: (NSString*) basePath;
 /*!
  * @brief Gets the name of the player.
  * @return The name of the player.

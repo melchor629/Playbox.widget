@@ -39,7 +39,7 @@ NSString* getBaseDirectory(NSString* extra);
     return metadata;
 }
 
-- (NSString*) getCover {
+- (NSString*) getCover: (NSString*) basePath {
     NSData* rawData = [[app artworkImage] TIFFRepresentation];
     if(rawData != nil) {
         NSUInteger hash;
@@ -48,7 +48,7 @@ NSString* getBaseDirectory(NSString* extra);
         } else {
             hash = [[NSString stringWithFormat:@"%@::%@", [app artist], [app name]] hash];
         }
-        NSString* path = [NSString stringWithFormat:@"%@/Playbox.widget/lib/cover%lx.tiff", getBaseDirectory(nil), hash];
+        NSString* path = [NSString stringWithFormat:@"%@/v%lx.tiff", basePath, hash];
         FILE* file = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
         fwrite([rawData bytes], [rawData length], 1, file);
         fclose(file);

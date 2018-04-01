@@ -38,7 +38,7 @@
     return metadata;
 }
 
-- (NSString*) getCover {
+- (NSString*) getCover: (NSString*) basePath {
     return [[app currentTrack] artworkUrl];
 }
 

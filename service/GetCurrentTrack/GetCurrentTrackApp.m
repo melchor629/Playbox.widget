@@ -28,7 +28,7 @@ NSString* getBaseDirectory(NSString* extra);
 @implementation Player
 - (bool) isPlaying { return false; }
 - (SongMetadata*) getMetadata { return nil; }
-- (NSString*) getCover { return nil; }
+- (NSString*) getCover: (NSString*) path { return nil; }
 - (NSString*) name { return nil; }
 @end
 @implementation SongMetadata
@@ -41,6 +41,7 @@ NSString* getBaseDirectory(NSString* extra);
     NSString* coverFileUrl, *oldCoverFileUrl;
     NSArray* players;
     NSString* pidFilePath;
+    NSString* coverBasePath;
 }
 
 - (instancetype) init {
@@ -54,6 +55,11 @@ NSString* getBaseDirectory(NSString* extra);
                nil];
     songChanged = false;
     pidFilePath = getBaseDirectory(@"Playbox.widget/lib/pidfile");
+    coverBasePath = getBaseDirectory(@"Playbox.widget/covers");
+    if(mkdir([coverBasePath cStringUsingEncoding:NSUTF8StringEncoding], 0733) != 0) {
+        [[NSFileManager defaultManager] removeItemAtPath:coverBasePath error:nil];
+        mkdir([coverBasePath cStringUsingEncoding:NSUTF8StringEncoding], 0733);
+    }
 
     pid_t pid = getpid();
     FILE* pidFile = fopen([pidFilePath cStringUsingEncoding:NSUTF8StringEncoding], "w");
@@ -108,7 +114,7 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
                     [[NSFileManager defaultManager] removeItemAtPath:oldCoverFileUrl error:nil];
                 }
                 oldCoverFileUrl = coverFileUrl;
-                coverFileUrl = [player getCover];
+                coverFileUrl = [player getCover: coverBasePath];
             }
 
             last.artistName = current.artistName;
@@ -153,7 +159,7 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
                             @"albumName": [last.albumName length] == 0 ? [NSNull null] : last.albumName,
                             @"songDuration": [NSNumber numberWithUnsignedInteger:last.songDuration],
                             @"currentPosition": [NSNumber numberWithUnsignedInteger:last.currentPosition],
-                            @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : [NSNull null],
+                            @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : @"/Playbox.widget/lib/default.png",
                             @"songChanged": [NSNumber numberWithBool:songChanged],
                             @"isLoved": [NSNumber numberWithBool:last.isLoved],
                             @"isPlaying": [NSNumber numberWithBool:true],

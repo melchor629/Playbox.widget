@@ -40,7 +40,7 @@ NSString* getBaseDirectory(NSString* extra);
     return metadata;
 }
 
-- (NSString*) getCover {
+- (NSString*) getCover: (NSString*) basePath {
     iTunesTrack* currentTrack = [app currentTrack];
     SBElementArray<iTunesArtwork*>* artworks = [currentTrack artworks];
     if([artworks count] > 0) {
@@ -57,7 +57,7 @@ NSString* getBaseDirectory(NSString* extra);
         } else {
             hash = [[NSString stringWithFormat:@"%@::%@", [currentTrack artist], [currentTrack name]] hash];
         }
-        NSString* path = [NSString stringWithFormat:@"%@/Playbox.widget/lib/cover%lx.%s", getBaseDirectory(nil), hash, ext];
+        NSString* path = [NSString stringWithFormat:@"%@/i%lx.%s", basePath, hash, ext];
         FILE* file = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
         fwrite([rawData bytes], [rawData length], 1, file);
         fclose(file);
