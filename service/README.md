@@ -5,16 +5,15 @@ Supports iTunes, Spotify and VOX.
 
 ## How does it works?
 
-Creates a special file `/tmp/get_current_track`, is like a UDP socket but simpler. When some data is written in this file
-(anything), the service queries the status of the three players and returns the right information in json format. The json
-can be read by reading the file `/tmp_get_current_track`.
+Creates a simple HTTP server at port `45987`. When a request is received in the server, will query information from the
+players (if there are changes) and return a JSON with the results.
 
 The program doesn't run in background by default, must use the argument `-d` to make it run as a service/daemon.
 
 An example of request/response can be:
 
 ```
-echo > /tmp/get_current_track; cat < /tmp/get_current_track
+ $ curl localhost:45987
 {"isPlaying":true,"player":"iTunes","albumName":"What Went Down","isLoved":false,"artistName":"Foals","songName":"Mountain at My Gates","songDuration":244,"currentPosition":1,"coverUrl":"\/Playbox.widget\/lib\/covere58d3f4f97afdb18.jpg","songChanged":false}
 ```
 
@@ -37,9 +36,9 @@ So I ended up by doing the same the [original AppleScript][1] was doing, but in 
 To add a new player, you can [fill an issue][2] or make a [pull request][3].
 
 To add (in code) a new player you must create a new class extending from `Player` inside `GetCurrentTrack/Players` and
-adding an instance of it in the array of [GetCurrentTrackApp.m:47][4].
+adding an instance of it in the array of [GetCurrentTrackApp.m:51][4].
 
   [1]: https://github.com/Pe8er/Playbox.widget/blob/master/Playbox.widget/lib/Get%20Current%20Track.applescript
   [2]: https://github.com/melchor629/Playbox.widget/issues/new
   [3]: https://github.com/melchor629/Playbox.widget/compare
-  [4]: https://github.com/melchor629/Playbox.widget/blob/master/service/GetCurrentTrack/GetCurrentTrackApp.m#L47
+  [4]: https://github.com/melchor629/Playbox.widget/blob/master/service/GetCurrentTrack/GetCurrentTrackApp.m#L51
