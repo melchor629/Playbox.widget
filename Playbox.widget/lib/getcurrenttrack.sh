@@ -5,7 +5,7 @@ GetCurrentTrack="$lib/GetCurrentTrack"
 
 function wait_daemon {
     #Wait untile the pidfile is created
-    while [ ! -f "$lib/pidfile"]; do
+    while [ ! -f "$lib/pidfile" ]; do
         python -c "import time; time.sleep(0.1)"
     done
     #When is created, wait a bit, just in case

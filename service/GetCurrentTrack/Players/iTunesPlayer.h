@@ -13,7 +13,7 @@
 
 - (bool) isPlaying;
 - (SongMetadata*) getMetadata;
-- (NSString*) getCover;
+- (NSString*) getCover: (NSString*) basePath;
 - (NSString*) name;
 
 @end
