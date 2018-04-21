@@ -24,10 +24,11 @@ NSString* getBaseDirectory(NSString* extra) {
 }
 
 bool isRunning(NSString* bundleId) {
+    NSArray* running = [[NSWorkspace sharedWorkspace] runningApplications];
     NSPredicate* predicate = [NSPredicate predicateWithBlock:^BOOL(NSRunningApplication* evaluatedObject, NSDictionary* bindings) {
         return [[evaluatedObject bundleIdentifier] isEqualToString:bundleId];
     }];
-    return 0 < [[[[NSWorkspace sharedWorkspace] runningApplications] filteredArrayUsingPredicate: predicate] count];
+    return 0 < [[running filteredArrayUsingPredicate: predicate] count];
 }
 
 #define checc(v, msg) { \
@@ -46,8 +47,10 @@ static void run(bool daemonized) {
         signal(SIGINT, interruption);
         signal(SIGTERM, interruption);
         GetCurrentTrackApp* app = [[GetCurrentTrackApp alloc] init];
-        [app loop: daemonized];
-        [app cleanup];
+        NSThread* thread = [[NSThread alloc] initWithTarget:app selector:@selector(loop:) object:daemonized ? app : nil];
+        [thread start];
+        id a = [[NSApplication alloc] init]; (void)a; //Trick to make isRunning() work
+        [NSApp run];
     }
 }
 

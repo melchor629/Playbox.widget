@@ -6,6 +6,7 @@
 //  Copyright © 2018 Melchor Garau Madrigal. All rights reserved.
 //
 
+#import <Cocoa/Cocoa.h>
 #import "GetCurrentTrackApp.h"
 #import "Players/Player.h"
 #import "Players/SpotifyPlayer.h"
@@ -185,6 +186,9 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
         }
     }
     close(sock);
+
+    [self cleanup];
+    [NSApp terminate: self];
 }
 
 - (void) cleanup {
