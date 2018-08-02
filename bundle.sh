@@ -4,7 +4,7 @@
 mkdir -p dist
 
 cp -r Playbox.widget dist
-cp service/install_command.command service/me.melchor9000.getcurrenttrack.plist dist/Playbox.widget
+cp service/install_service.command service/me.melchor9000.getcurrenttrack.plist dist/Playbox.widget
 cp service/Build/Products/Debug/GetCurrentTrack dist/Playbox.widget/lib
 
 cd dist

@@ -25,7 +25,7 @@ This widget shows currently played song in either iTunes or Spotify. It has a sp
 
  1. Download the zip from releases
  2. Extract it into the Übersicht widgets folder
- 3. Open `Playbox.widget` and you'll see a `install_daemon.command` file
+ 3. Open `Playbox.widget` and you'll see a `install_service.command` file
  4. Open this file, it will open a _Terminal_ and install a _Launch Agent_ (aka daemon) that will serve as the backend for the widget
  5. You should now enjoy the widget now :)
 
