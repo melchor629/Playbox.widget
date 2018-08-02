@@ -21,6 +21,14 @@ This widget shows currently played song in either iTunes or Spotify. It has a sp
 - Uses less CPU than original.
 - Uses a background service to detect song information. [See more](https://github.com/melchor629/Playbox.widget/blob/master/service/README.md)
 
+# How to install
+
+ 1. Download the zip from releases
+ 2. Extract it into the Übersicht widgets folder
+ 3. Open `Playbox.widget` and you'll see a `install_daemon.command` file
+ 4. Open this file, it will open a _Terminal_ and install a _Launch Agent_ (aka daemon) that will serve as the backend for the widget
+ 5. You should now enjoy the widget now :)
+
 # Options
 
 Here's how you can set all the widget's options. Open `index.coffee` and look at the very top of the document:

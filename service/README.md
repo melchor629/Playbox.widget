@@ -21,8 +21,7 @@ The artwork has different meanings depending of the player. In Spotify is the UR
 iTunes and VOX is a relative path (relative from `~/Library/Application Support/Übersicht/widgets`) to the artwork placed
 there as a temporary file. These files are erased when some time passes (and are not used) or when the service is closed.
 
-To close the service, search for `GetCurrentTrack` in _System Monitor_ and close it. You can also use `pkill GetCurrentTrack`.
-Well, I think is not necessary to close the service as its goal is to optimize the widget.
+This service is ready to be installed as a _Launch Daemon_ with the easy script `install_service.command`. This will copy, configure and load the daemon. And it will run at the start. To disable the daemon, run `launchctl unload -w ~/Library/LaunchAgents/me.melchor9000.getcurrenttrack.plist`. To enable again, the same command but with `load` instead of `unload`.
 
 ## Why a background service for the widget?
 
