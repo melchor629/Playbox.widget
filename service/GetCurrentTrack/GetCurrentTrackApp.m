@@ -24,7 +24,10 @@ extern volatile bool notInterrupted;
 NSString* getBaseDirectory(NSString* extra);
 
 #define checc(v, msg) {if((v) == -1) {NSLog(@"Failed in %s:%d: %s: %s\n", __FILE__, __LINE__, strerror(errno), msg);}}
-
+#define TSTR(x) #x
+#define TO_STRING(x) TSTR(x)
+#define PORT 45987
+#define PORT_STR TO_STRING(PORT)
 
 @implementation Player
 - (bool) isPlaying { return false; }
@@ -141,10 +144,11 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
     addr.sin6_family = AF_INET6;
     struct in6_addr a = IN6ADDR_LOOPBACK_INIT;
     memcpy(&addr.sin6_addr, &a, sizeof(addr.sin6_addr));
-    addr.sin6_port = htons(daemonized ? 45987 : 45988);
-    checc(bind(sock, (struct sockaddr*) &addr, sizeof(addr)), "Cannot bind to tcp://[::]:45987");
+    addr.sin6_port = htons(PORT);
+    checc(bind(sock, (struct sockaddr*) &addr, sizeof(addr)), "Cannot bind to http://[::]:" PORT_STR);
 
     listen(sock, 10);
+    NSLog(@"Listening at http://[::]:%s", PORT_STR);
 
     while(!notInterrupted) {
         int client;
@@ -173,6 +177,7 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
             const char headers[] =
                 "HTTP/1.1 200 OK\r\n"
                 "Content-Type: application/json; encoding=utf-8\r\n"
+                "Access-Control-Allow-Origin: *\r\n"
                 "\r\n";
             write(client, headers, sizeof(headers) - 1);
             ssize_t written = 0;

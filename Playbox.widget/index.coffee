@@ -21,7 +21,24 @@ options =
   # Stick the widget in the corner? Set to *true* if you're using it with Sidebar widget, set to *false* if you'd like to give it some breathing room and a drop shadow.
   stickInCorner: false                  # true | false
 
-command: "Playbox.widget/lib/getcurrenttrack.sh"
+command: (callback) ->
+  errorCallback = (error) ->
+    callback null,
+      isPlaying: true
+      songName: "Daemon is not running"
+      artistName: "Check README.md for more info"
+      albumName: null
+      songDuration: 1
+      currentPosition: 1
+      coverUrl: "/Playbox.widget/lib/default.png"
+      player: "Nothing"
+      songChanged: true
+
+  fetch('http://localhost:45987')
+    .then((res) -> res.json())
+    .then((data) -> callback(null, data))
+    .catch((error) -> errorCallback(error))
+
 refreshFrequency: '1s'
 
 style: """
