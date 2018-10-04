@@ -34,7 +34,7 @@ command: (callback) ->
       player: "Nothing"
       songChanged: true
 
-  fetch('http://localhost:45987')
+  fetch('http://127.0.0.1:41417/http://[::1]:45987')
     .then((res) -> res.json())
     .then((data) -> callback(null, data))
     .catch((error) -> errorCallback(error))

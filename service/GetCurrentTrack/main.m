@@ -49,7 +49,7 @@ static void run(bool daemonized) {
         GetCurrentTrackApp* app = [[GetCurrentTrackApp alloc] init];
         NSThread* thread = [[NSThread alloc] initWithTarget:app selector:@selector(loop:) object:daemonized ? app : nil];
         [thread start];
-        id a = [[NSApplication alloc] init]; (void)a; //Trick to make isRunning() work
+        id a = [NSApplication sharedApplication]; (void)a; //Trick to make isRunning() work
         [NSApp run];
     }
 }
