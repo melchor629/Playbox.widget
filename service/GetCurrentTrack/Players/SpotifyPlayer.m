@@ -26,15 +26,15 @@
 - (SongMetadata*) getMetadata {
     SongMetadata* metadata = [[SongMetadata alloc] init];
     SpotifyTrack* currentTrack = [app currentTrack];
-    metadata.artistName = [currentTrack albumArtist];
-    if(metadata.artistName == nil || [metadata.artistName length] == 0) {
-        metadata.artistName = [currentTrack artist];
+    metadata.artist = [currentTrack albumArtist];
+    if(metadata.artist == nil || [metadata.artist length] == 0) {
+        metadata.artist = [currentTrack artist];
     }
-    metadata.songName = [currentTrack name];
-    metadata.albumName = [currentTrack album];
-    metadata.songDuration = [currentTrack duration] / 1000;
-    metadata.isLoved = NO;
-    metadata.currentPosition = [app playerPosition];
+    metadata.name = [currentTrack name];
+    metadata.album = [currentTrack album];
+    metadata.duration = [currentTrack duration] / 1000;
+    metadata.loved = NO;
+    metadata.playerPosition = [app playerPosition];
     return metadata;
 }
 

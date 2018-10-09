@@ -26,17 +26,8 @@ NSString* getBaseDirectory(NSString* extra);
 #define checc(v, msg) {if((v) == -1) {NSLog(@"Failed in %s:%d: %s: %s\n", __FILE__, __LINE__, strerror(errno), msg);}}
 #define TSTR(x) #x
 #define TO_STRING(x) TSTR(x)
-#define PORT 45987
+#define PORT 45988
 #define PORT_STR TO_STRING(PORT)
-
-@implementation Player
-- (bool) isPlaying { return false; }
-- (SongMetadata*) getMetadata { return nil; }
-- (NSString*) getCover: (NSString*) path { return nil; }
-- (NSString*) name { return nil; }
-@end
-@implementation SongMetadata
-@end
 
 
 @implementation GetCurrentTrackApp {
@@ -92,15 +83,15 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
 
 - (bool) didSongChange: (SongMetadata*) current {
     return !(
-             areEqualsWithNil(current.artistName, last.artistName) &&
-             areEqualsWithNil(current.songName, last.songName) &&
-             areEqualsWithNil(current.albumName, last.albumName)
+             areEqualsWithNil(current.artist, last.artist) &&
+             areEqualsWithNil(current.name, last.name) &&
+             areEqualsWithNil(current.album, last.album)
              );
 }
 
 - (bool) didCoverChange: (SongMetadata*) current {
-    if(current.albumName != nil) {
-        return !(areEqualsWithNil(current.artistName, last.artistName) && areEqualsWithNil(current.albumName, last.albumName));
+    if(current.album != nil) {
+        return !(areEqualsWithNil(current.artist, last.artist) && areEqualsWithNil(current.album, last.album));
     } else {
         return true;
     }
@@ -109,8 +100,8 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
 - (void) checkForChanges: (Player*) player {
     if(player != nil) {
         SongMetadata* current = [player getMetadata];
-        last.currentPosition = current.currentPosition;
-        last.isLoved = current.isLoved;
+        last.playerPosition = current.playerPosition;
+        last.loved = current.loved;
         if([self didSongChange:current]) {
             if([self didCoverChange:current]) {
                 if(oldCoverFileUrl != nil && ![[oldCoverFileUrl substringToIndex:4] isEqualToString:@"http"]) {
@@ -121,11 +112,11 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
                 coverFileUrl = [player getCover: coverBasePath];
             }
 
-            last.artistName = current.artistName;
-            last.albumName = current.albumName;
-            last.songName = current.songName;
-            last.songDuration = current.songDuration;
-            last.isLoved = current.isLoved;
+            last.artist = current.artist;
+            last.album = current.album;
+            last.name = current.name;
+            last.duration = current.duration;
+            last.loved = current.loved;
             songChanged = true;
         } else {
             songChanged = false;
@@ -159,14 +150,9 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
             NSData* data = nil;
             if(player != nil) {
                 id dict = @{
-                            @"artistName": [last.artistName length] == 0 ? [NSNull null] : last.artistName,
-                            @"songName": [last.songName length] == 0 ? [NSNull null] : last.songName,
-                            @"albumName": [last.albumName length] == 0 ? [NSNull null] : last.albumName,
-                            @"songDuration": [NSNumber numberWithUnsignedInteger:last.songDuration],
-                            @"currentPosition": [NSNumber numberWithUnsignedInteger:last.currentPosition],
+                            @"metadata": [last asDict],
                             @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : @"/Playbox.widget/lib/default.png",
                             @"songChanged": [NSNumber numberWithBool:songChanged],
-                            @"isLoved": [NSNumber numberWithBool:last.isLoved],
                             @"isPlaying": [NSNumber numberWithBool:true],
                             @"player": [player name]
                             };

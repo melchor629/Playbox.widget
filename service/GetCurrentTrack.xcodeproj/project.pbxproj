@@ -13,6 +13,11 @@
 		485716891FFC306B00C2AE7F /* SpotifyPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 485716881FFC306B00C2AE7F /* SpotifyPlayer.m */; };
 		4857168C1FFC4BC100C2AE7F /* iTunesPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4857168B1FFC4BC100C2AE7F /* iTunesPlayer.m */; };
 		4857168F1FFC549100C2AE7F /* VOXPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4857168E1FFC549100C2AE7F /* VOXPlayer.m */; };
+		48F7F6D3216D2CDD0030B45F /* GetCurrentTrack.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6D2216D2CDD0030B45F /* GetCurrentTrack.mm */; };
+		48F7F6D6216D2D450030B45F /* GetArtwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6D5216D2D450030B45F /* GetArtwork.mm */; };
+		48F7F6DA216D2F660030B45F /* GetState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6D9216D2F660030B45F /* GetState.mm */; };
+		48F7F6DC216D36BD0030B45F /* ParsePseudoYaml.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6DB216D36BD0030B45F /* ParsePseudoYaml.m */; };
+		48F7F6DE216D4CBF0030B45F /* Player.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6DD216D4CBF0030B45F /* Player.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,7 +39,6 @@
 		485716771FFC2A9C00C2AE7F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4857167F1FFC2D8500C2AE7F /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		485716811FFC2E3500C2AE7F /* VOX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VOX.h; sourceTree = "<group>"; };
-		485716821FFC2E3500C2AE7F /* iTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunes.h; sourceTree = "<group>"; };
 		485716831FFC2E3500C2AE7F /* Spotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Spotify.h; sourceTree = "<group>"; };
 		485716861FFC2EC900C2AE7F /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		485716871FFC306B00C2AE7F /* SpotifyPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpotifyPlayer.h; sourceTree = "<group>"; };
@@ -43,6 +47,14 @@
 		4857168B1FFC4BC100C2AE7F /* iTunesPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTunesPlayer.m; sourceTree = "<group>"; };
 		4857168D1FFC549100C2AE7F /* VOXPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VOXPlayer.h; sourceTree = "<group>"; };
 		4857168E1FFC549100C2AE7F /* VOXPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VOXPlayer.m; sourceTree = "<group>"; };
+		48F7F6D1216D2CDD0030B45F /* GetCurrentTrack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetCurrentTrack.h; sourceTree = "<group>"; };
+		48F7F6D2216D2CDD0030B45F /* GetCurrentTrack.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GetCurrentTrack.mm; sourceTree = "<group>"; };
+		48F7F6D4216D2D450030B45F /* GetArtwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetArtwork.h; sourceTree = "<group>"; };
+		48F7F6D5216D2D450030B45F /* GetArtwork.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GetArtwork.mm; sourceTree = "<group>"; };
+		48F7F6D8216D2F660030B45F /* GetState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetState.h; sourceTree = "<group>"; };
+		48F7F6D9216D2F660030B45F /* GetState.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GetState.mm; sourceTree = "<group>"; };
+		48F7F6DB216D36BD0030B45F /* ParsePseudoYaml.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ParsePseudoYaml.m; sourceTree = "<group>"; };
+		48F7F6DD216D4CBF0030B45F /* Player.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Player.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +89,7 @@
 		485716761FFC2A9C00C2AE7F /* GetCurrentTrack */ = {
 			isa = PBXGroup;
 			children = (
+				48F7F6D0216D2C580030B45F /* Scripts */,
 				485716851FFC2E9800C2AE7F /* Players */,
 				485716841FFC2E5300C2AE7F /* ScriptingBridgeHeaders */,
 				485716771FFC2A9C00C2AE7F /* main.m */,
@@ -97,7 +110,6 @@
 		485716841FFC2E5300C2AE7F /* ScriptingBridgeHeaders */ = {
 			isa = PBXGroup;
 			children = (
-				485716821FFC2E3500C2AE7F /* iTunes.h */,
 				485716831FFC2E3500C2AE7F /* Spotify.h */,
 				485716811FFC2E3500C2AE7F /* VOX.h */,
 			);
@@ -108,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				485716861FFC2EC900C2AE7F /* Player.h */,
+				48F7F6DD216D4CBF0030B45F /* Player.m */,
 				485716871FFC306B00C2AE7F /* SpotifyPlayer.h */,
 				485716881FFC306B00C2AE7F /* SpotifyPlayer.m */,
 				4857168A1FFC4BC100C2AE7F /* iTunesPlayer.h */,
@@ -116,6 +129,28 @@
 				4857168E1FFC549100C2AE7F /* VOXPlayer.m */,
 			);
 			path = Players;
+			sourceTree = "<group>";
+		};
+		48F7F6D0216D2C580030B45F /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				48F7F6D7216D2D4A0030B45F /* iTunes */,
+				48F7F6DB216D36BD0030B45F /* ParsePseudoYaml.m */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
+		48F7F6D7216D2D4A0030B45F /* iTunes */ = {
+			isa = PBXGroup;
+			children = (
+				48F7F6D1216D2CDD0030B45F /* GetCurrentTrack.h */,
+				48F7F6D2216D2CDD0030B45F /* GetCurrentTrack.mm */,
+				48F7F6D4216D2D450030B45F /* GetArtwork.h */,
+				48F7F6D5216D2D450030B45F /* GetArtwork.mm */,
+				48F7F6D8216D2F660030B45F /* GetState.h */,
+				48F7F6D9216D2F660030B45F /* GetState.mm */,
+			);
+			path = iTunes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -179,7 +214,12 @@
 				485716781FFC2A9C00C2AE7F /* main.m in Sources */,
 				4857168C1FFC4BC100C2AE7F /* iTunesPlayer.m in Sources */,
 				4804FD241FFE61C000819901 /* GetCurrentTrackApp.m in Sources */,
+				48F7F6DE216D4CBF0030B45F /* Player.m in Sources */,
 				485716891FFC306B00C2AE7F /* SpotifyPlayer.m in Sources */,
+				48F7F6D6216D2D450030B45F /* GetArtwork.mm in Sources */,
+				48F7F6DC216D36BD0030B45F /* ParsePseudoYaml.m in Sources */,
+				48F7F6D3216D2CDD0030B45F /* GetCurrentTrack.mm in Sources */,
+				48F7F6DA216D2F660030B45F /* GetState.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

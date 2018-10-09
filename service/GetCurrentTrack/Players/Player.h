@@ -15,18 +15,20 @@
  * Class that holds metadata information about a song
  **/
 @interface SongMetadata : NSObject
-    /*! @brief The album artist or artist of the song. Should not be `nil`. */
-    @property NSString* artistName;
-    /*! @brief The song/track name. Should not be `nil`. */
-    @property NSString* songName;
-    /*! @brief The album name of the song. Can be `nil`. */
-    @property NSString* albumName;
+    /*! @brief The album artist or artist of the song. */
+    @property (nullable) NSString* artist;
+    /*! @brief The song/track name. */
+    @property (nonnull) NSString* name;
+    /*! @brief The album name of the song. */
+    @property (nullable) NSString* album;
     /*! @brief The duration of the song in seconds. */
-    @property NSInteger songDuration;
+    @property NSInteger duration;
     /*! @brief `true` if the song is loved/liked. */
-    @property bool isLoved;
+    @property bool loved;
     /*! @brief The current playing position in seconds. */
-    @property NSInteger currentPosition;
+    @property NSInteger playerPosition;
+
+- (NSDictionary*) asDict;
 @end
 
 /*!

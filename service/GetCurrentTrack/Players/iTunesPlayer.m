@@ -7,50 +7,58 @@
 //
 
 #import "iTunesPlayer.h"
-#import "../ScriptingBridgeHeaders/iTunes.h"
+#import "../Scripts/iTunes/GetArtwork.h"
+#import "../Scripts/iTunes/GetCurrentTrack.h"
+#import "../Scripts/iTunes/GetState.h"
 
 NSString* getBaseDirectory(NSString* extra);
 
 @implementation iTunesPlayer {
-    iTunesApplication* app;
+    iTunesGetArtworkScript* getArtworkScript;
+    iTunesGetCurrentTrackScript* getCurrentTrackScript;
+    iTunesGetStateScript* getStateScript;
 }
 
 - (instancetype) init {
     id _self = [super init];
-    app = [SBApplication applicationWithBundleIdentifier:@"com.apple.iTunes"];
+    getArtworkScript = [[iTunesGetArtworkScript alloc] init];
+    getCurrentTrackScript = [[iTunesGetCurrentTrackScript alloc] init];
+    getStateScript = [[iTunesGetStateScript alloc] init];
     return _self;
 }
 
 - (bool) isPlaying {
-    return isRunning(@"com.apple.iTunes") && [app isRunning] && [app playerState] == iTunesEPlSPlaying;
+    return isRunning(@"com.apple.iTunes") && [[getStateScript state] isEqualToString:@"playing"];
 }
 
 - (SongMetadata*) getMetadata {
     SongMetadata* metadata = [[SongMetadata alloc] init];
-    iTunesTrack* currentTrack = [app currentTrack];
-    metadata.artistName = [currentTrack albumArtist];
-    if(metadata.artistName == nil || [metadata.artistName length] == 0) {
-        metadata.artistName = [currentTrack artist];
+    iTunesCurrentTrack* currentTrack = [getCurrentTrackScript currentTrack];
+    metadata.artist = [currentTrack albumArtist];
+    if(metadata.artist == nil || [metadata.artist length] == 0) {
+        metadata.artist = [currentTrack artist];
     }
-    metadata.songName = [currentTrack name];
-    metadata.albumName = [currentTrack album];
-    metadata.songDuration = [currentTrack duration];
-    metadata.isLoved = NO;
-    metadata.currentPosition = [app playerPosition];
+    metadata.name = [currentTrack name];
+    metadata.album = [currentTrack album];
+    metadata.duration = [currentTrack duration];
+    metadata.loved = [currentTrack loved];
+    metadata.playerPosition = [currentTrack position];
     return metadata;
 }
 
 - (NSString*) getCover: (NSString*) basePath {
-    iTunesTrack* currentTrack = [app currentTrack];
-    SBElementArray<iTunesArtwork*>* artworks = [currentTrack artworks];
-    if([artworks count] > 0) {
-        iTunesArtwork* artwork = [artworks objectAtIndex:0];
+    iTunesArtwork artwork = [getArtworkScript artwork];
+    if(artwork.data != nil) {
+        iTunesCurrentTrack* currentTrack = [getCurrentTrackScript currentTrack];
         const char* ext = "bin";
-        const void* extData = [[((NSAppleEventDescriptor*)[artwork format]) data] bytes];
-        if(!strcmp("GEPJ", extData)) ext = "jpg";
-        else if(!strcmp("GNP", extData)) ext = "png";
-        else if(!strcmp("FFIT", extData)) ext = "tiff";
-        NSData* rawData = [artwork rawData];
+        if(artwork.type == 'JPEG') {
+            ext = "jpg";
+        } else if(artwork.type == 'PNG ') {
+            ext = "png";
+        } else if(artwork.type == 'TIFF') {
+            ext = "tiff";
+        }
+
         NSUInteger hash;
         if([currentTrack album] != nil) {
             hash = [[currentTrack album] hash];
@@ -59,7 +67,7 @@ NSString* getBaseDirectory(NSString* extra);
         }
         NSString* path = [NSString stringWithFormat:@"%@/i%lx.%s", basePath, hash, ext];
         FILE* file = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
-        fwrite([rawData bytes], [rawData length], 1, file);
+        fwrite([artwork.data bytes], [artwork.data length], 1, file);
         fclose(file);
         return path;
     } else {

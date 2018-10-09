@@ -27,15 +27,15 @@ NSString* getBaseDirectory(NSString* extra);
 
 - (SongMetadata*) getMetadata {
     SongMetadata* metadata = [[SongMetadata alloc] init];
-    metadata.artistName = [app albumArtist];
-    if(metadata.artistName == nil || [metadata.artistName length] == 0) {
-        metadata.artistName = [app artist];
+    metadata.artist = [app albumArtist];
+    if(metadata.artist == nil || [metadata.artist length] == 0) {
+        metadata.artist = [app artist];
     }
-    metadata.songName = [app track];
-    metadata.albumName = [app album];
-    metadata.songDuration = [app totalTime];
-    metadata.isLoved = NO;
-    metadata.currentPosition = [app currentTime];
+    metadata.name = [app track];
+    metadata.album = [app album];
+    metadata.duration = [app totalTime];
+    metadata.loved = NO;
+    metadata.playerPosition = [app currentTime];
     return metadata;
 }
 

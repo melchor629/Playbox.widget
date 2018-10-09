@@ -23,14 +23,6 @@ NSString* getBaseDirectory(NSString* extra) {
     return extra ? [NSString stringWithFormat:@"%@/%@", nscwd, extra] : nscwd;
 }
 
-bool isRunning(NSString* bundleId) {
-    NSArray* running = [[NSWorkspace sharedWorkspace] runningApplications];
-    NSPredicate* predicate = [NSPredicate predicateWithBlock:^BOOL(NSRunningApplication* evaluatedObject, NSDictionary* bindings) {
-        return [[evaluatedObject bundleIdentifier] isEqualToString:bundleId];
-    }];
-    return 0 < [[running filteredArrayUsingPredicate: predicate] count];
-}
-
 #define checc(v, msg) { \
     if((v) == -1) { \
         NSLog(@"Failed in %s:%d: %s: %s\n", __FILE__, __LINE__, strerror(errno), msg);\
