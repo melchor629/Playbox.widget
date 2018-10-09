@@ -294,17 +294,18 @@ update: (output, domEl) ->
     div.animate({opacity: 0}, 250, 'swing').hide(1)
   else
     values = JSON.parse(output)
-    if not values.isPlaying
+    if values.status isnt "playing"
       return div.animate({opacity: 0}, 250, 'swing').hide(1)
 
-    div.find('.artist').html(values.artistName)
-    div.find('.song').html(values.songName)
-    div.find('.album').html(values.albumName)
-    tDuration = values.songDuration
-    tPosition = values.currentPosition
+    metadata = values.metadata
+    div.find('.artist').html(metadata.albumArtist || metadata.artist)
+    div.find('.song').html(metadata.name)
+    div.find('.album').html(metadata.album)
+    tDuration = metadata.duration
+    tPosition = metadata.position
     tArtwork = values.coverUrl
-    songChanged = values.songChanged
-    isLoved = values.isLoved
+    songChanged = metadata.songChanged
+    isLoved = metadata.loved
     currArt = "/" + div.find('.art').css('background-image').split('/').slice(-3).join().replace(/\,/g, '/').slice(0,-1)
     tWidth = div.width()
     tCurrent = (tPosition / tDuration) * tWidth

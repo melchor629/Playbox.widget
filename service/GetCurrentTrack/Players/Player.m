@@ -67,7 +67,7 @@
              @"discNumber": discNumber > 0 ? [NSNumber numberWithUnsignedInteger:discNumber] : [NSNull null],
              @"duration": [NSNumber numberWithDouble:duration],
              @"genre": genre ? genre : [NSNull null],
-             @"isLoved": [NSNumber numberWithBool:loved],
+             @"loved": [NSNumber numberWithBool:loved],
              @"name": name ? name : [NSNull null],
              @"trackCount": trackCount > 0 ? [NSNumber numberWithUnsignedInteger:trackCount] : [NSNull null],
              @"trackNumber": trackNumber > 0 ? [NSNumber numberWithUnsignedInteger:trackNumber] : [NSNull null],
