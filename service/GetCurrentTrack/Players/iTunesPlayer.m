@@ -32,24 +32,13 @@ NSString* getBaseDirectory(NSString* extra);
 }
 
 - (SongMetadata*) getMetadata {
-    SongMetadata* metadata = [[SongMetadata alloc] init];
-    iTunesCurrentTrack* currentTrack = [getCurrentTrackScript currentTrack];
-    metadata.artist = [currentTrack albumArtist];
-    if(metadata.artist == nil || [metadata.artist length] == 0) {
-        metadata.artist = [currentTrack artist];
-    }
-    metadata.name = [currentTrack name];
-    metadata.album = [currentTrack album];
-    metadata.duration = [currentTrack duration];
-    metadata.loved = [currentTrack loved];
-    metadata.playerPosition = [currentTrack position];
-    return metadata;
+    return [getCurrentTrackScript currentTrack];
 }
 
 - (NSString*) getCover: (NSString*) basePath {
     iTunesArtwork artwork = [getArtworkScript artwork];
     if(artwork.data != nil) {
-        iTunesCurrentTrack* currentTrack = [getCurrentTrackScript currentTrack];
+        SongMetadata* currentTrack = [self getMetadata];
         const char* ext = "bin";
         if(artwork.type == 'JPEG') {
             ext = "jpg";

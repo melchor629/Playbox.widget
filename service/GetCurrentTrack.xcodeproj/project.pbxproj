@@ -134,6 +134,7 @@
 		48F7F6D0216D2C580030B45F /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
+				48F7F6DF216D517F0030B45F /* Spotify */,
 				48F7F6D7216D2D4A0030B45F /* iTunes */,
 				48F7F6DB216D36BD0030B45F /* ParsePseudoYaml.m */,
 			);
@@ -151,6 +152,13 @@
 				48F7F6D9216D2F660030B45F /* GetState.mm */,
 			);
 			path = iTunes;
+			sourceTree = "<group>";
+		};
+		48F7F6DF216D517F0030B45F /* Spotify */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Spotify;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

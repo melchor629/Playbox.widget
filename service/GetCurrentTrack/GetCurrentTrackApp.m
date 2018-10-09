@@ -100,8 +100,6 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
 - (void) checkForChanges: (Player*) player {
     if(player != nil) {
         SongMetadata* current = [player getMetadata];
-        last.playerPosition = current.playerPosition;
-        last.loved = current.loved;
         if([self didSongChange:current]) {
             if([self didCoverChange:current]) {
                 if(oldCoverFileUrl != nil && ![[oldCoverFileUrl substringToIndex:4] isEqualToString:@"http"]) {
@@ -112,15 +110,11 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
                 coverFileUrl = [player getCover: coverBasePath];
             }
 
-            last.artist = current.artist;
-            last.album = current.album;
-            last.name = current.name;
-            last.duration = current.duration;
-            last.loved = current.loved;
             songChanged = true;
         } else {
             songChanged = false;
         }
+        last = current;
     }
 }
 

@@ -26,17 +26,16 @@ NSString* getBaseDirectory(NSString* extra);
 }
 
 - (SongMetadata*) getMetadata {
-    SongMetadata* metadata = [[SongMetadata alloc] init];
-    metadata.artist = [app albumArtist];
-    if(metadata.artist == nil || [metadata.artist length] == 0) {
-        metadata.artist = [app artist];
-    }
-    metadata.name = [app track];
-    metadata.album = [app album];
-    metadata.duration = [app totalTime];
-    metadata.loved = NO;
-    metadata.playerPosition = [app currentTime];
-    return metadata;
+    id dict = @{
+                @"artist": [app artist],
+                @"albumArtist": [app albumArtist],
+                @"name": [app name],
+                @"album": [app album],
+                @"duration": [NSNumber numberWithDouble:[app totalTime]],
+                @"loved": @NO,
+                @"position": [NSNumber numberWithDouble:[app currentTime]]
+                };
+    return [[SongMetadata alloc] initWithDict:dict];
 }
 
 - (NSString*) getCover: (NSString*) basePath {

@@ -8,7 +8,7 @@
 
 #import "GetCurrentTrack.h"
 
-extern "C" NSDictionary* parse(NSString* yaml);
+extern "C" NSDictionary* pseudoYaml_parse(NSString* yaml);
 
 static const char* code = R"AS(
 on getOrNull(value)
@@ -37,40 +37,6 @@ end tell
 )AS";
 
 
-@implementation iTunesCurrentTrack
-@synthesize albumArtist;
-@synthesize album;
-@synthesize artist;
-@synthesize discCount;
-@synthesize discNumber;
-@synthesize duration;
-@synthesize genre;
-@synthesize loved;
-@synthesize name;
-@synthesize trackCount;
-@synthesize trackNumber;
-@synthesize year;
-@synthesize position;
-
-- (instancetype) initWithDict: (NSDictionary*) dict {
-    self = [super init];
-    albumArtist = [dict valueForKey:@"albumArtist"];
-    album = [dict valueForKey:@"album"];
-    artist = [dict valueForKey:@"artist"];
-    discCount = [dict valueForKey:@"discCount"];
-    discNumber = [dict valueForKey:@"discNumber"];
-    duration = [[dict valueForKey:@"duration"] doubleValue];
-    genre = [dict valueForKey:@"genre"];
-    loved = [[dict valueForKey:@"loved"] boolValue];
-    name = [dict valueForKey:@"name"];
-    trackCount = [dict valueForKey:@"trackCount"];
-    trackNumber = [dict valueForKey:@"trackNumber"];
-    year = [dict valueForKey:@"year"];
-    position = [[dict valueForKey:@"position"] doubleValue];
-    return self;
-}
-@end
-
 @implementation iTunesGetCurrentTrackScript {
     NSAppleScript* script;
 }
@@ -84,11 +50,11 @@ end tell
     return self;
 }
 
-- (iTunesCurrentTrack*) currentTrack {
+- (SongMetadata*) currentTrack {
     NSAppleEventDescriptor* event = [script executeAndReturnError: nil];
     NSString* yaml = [event stringValue];
-    NSDictionary* dict = parse(yaml);
-    return [[iTunesCurrentTrack alloc] initWithDict:dict];
+    NSDictionary* dict = pseudoYaml_parse(yaml);
+    return [[SongMetadata alloc] initWithDict:dict];
 }
 
 

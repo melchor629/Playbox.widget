@@ -18,7 +18,7 @@ static inline void init_vars() {
     }
 
     if(numberRegex == nil) {
-        numberRegex = [[NSRegularExpression alloc] initWithPattern:@"\\d+\\[.,]?\\d+"
+        numberRegex = [[NSRegularExpression alloc] initWithPattern:@"\\d+[.,]?\\d*"
                                                            options:NSRegularExpressionCaseInsensitive
                                                              error:nil];
     }
@@ -35,7 +35,7 @@ static NSArray<NSString*>* splitLine(NSString* string) {
     return res;
 }
 
-NSDictionary* parse(NSString* yaml) {
+NSDictionary* pseudoYaml_parse(NSString* yaml) {
     init_vars();
 
     NSMutableDictionary* res = [[NSMutableDictionary alloc] init];

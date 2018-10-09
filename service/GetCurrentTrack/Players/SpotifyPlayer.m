@@ -24,18 +24,17 @@
 }
 
 - (SongMetadata*) getMetadata {
-    SongMetadata* metadata = [[SongMetadata alloc] init];
     SpotifyTrack* currentTrack = [app currentTrack];
-    metadata.artist = [currentTrack albumArtist];
-    if(metadata.artist == nil || [metadata.artist length] == 0) {
-        metadata.artist = [currentTrack artist];
-    }
-    metadata.name = [currentTrack name];
-    metadata.album = [currentTrack album];
-    metadata.duration = [currentTrack duration] / 1000;
-    metadata.loved = NO;
-    metadata.playerPosition = [app playerPosition];
-    return metadata;
+    id dict = @{
+                @"artist": [currentTrack artist],
+                @"albumArtist": [currentTrack albumArtist],
+                @"name": [currentTrack name],
+                @"album": [currentTrack album],
+                @"duration": [NSNumber numberWithDouble:[currentTrack duration] / 1000.0],
+                @"loved": @NO,
+                @"position": [NSNumber numberWithDouble:[app playerPosition]]
+                };
+    return [[SongMetadata alloc] initWithDict:dict];
 }
 
 - (NSString*) getCover: (NSString*) basePath {
