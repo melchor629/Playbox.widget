@@ -7,38 +7,34 @@
 //
 
 #import "SpotifyPlayer.h"
-#import "../ScriptingBridgeHeaders/Spotify.h"
+#import "../Scripts/Spotify/GetArtwork.h"
+#import "../Scripts/Spotify/GetCurrentTrack.h"
+#import "../Scripts/Spotify/GetState.h"
 
 @implementation SpotifyPlayer {
-    SpotifyApplication* app;
+    SpotifyGetArtworkScript* getArtworkScript;
+    SpotifyGetCurrentTrackScript* getCurrentTrackScript;
+    SpotifyGetStateScript* getStateScript;
 }
 
 - (instancetype) init {
     id _self = [super init];
-    app = [SBApplication applicationWithBundleIdentifier:@"com.spotify.client"];
+    getArtworkScript = [[SpotifyGetArtworkScript alloc] init];
+    getCurrentTrackScript = [[SpotifyGetCurrentTrackScript alloc] init];
+    getStateScript = [[SpotifyGetStateScript alloc] init];
     return _self;
 }
 
 - (bool) isPlaying {
-    return isRunning(@"com.spotify.client") && [app isRunning] && [app playerState] == SpotifyEPlSPlaying;
+    return isRunning(@"com.spotify.client") && [[getStateScript state] isEqualToString:@"playing"];
 }
 
 - (SongMetadata*) getMetadata {
-    SpotifyTrack* currentTrack = [app currentTrack];
-    id dict = @{
-                @"artist": [currentTrack artist],
-                @"albumArtist": [currentTrack albumArtist],
-                @"name": [currentTrack name],
-                @"album": [currentTrack album],
-                @"duration": [NSNumber numberWithDouble:[currentTrack duration] / 1000.0],
-                @"loved": @NO,
-                @"position": [NSNumber numberWithDouble:[app playerPosition]]
-                };
-    return [[SongMetadata alloc] initWithDict:dict];
+    return [getCurrentTrackScript currentTrack];
 }
 
 - (NSString*) getCover: (NSString*) basePath {
-    return [[app currentTrack] artworkUrl];
+    return [getArtworkScript artwork];
 }
 
 - (NSString*) name { return @"Spotify"; }

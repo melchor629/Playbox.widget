@@ -21,6 +21,9 @@
 		48F7F6E7216D593A0030B45F /* GetState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6E1216D593A0030B45F /* GetState.mm */; };
 		48F7F6E8216D593A0030B45F /* GetCurrentTrack.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6E3216D593A0030B45F /* GetCurrentTrack.mm */; };
 		48F7F6E9216D593A0030B45F /* GetArtwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6E4216D593A0030B45F /* GetArtwork.mm */; };
+		48F7F6F0216D5CE20030B45F /* GetState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6EA216D5CE10030B45F /* GetState.mm */; };
+		48F7F6F1216D5CE20030B45F /* GetArtwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6EC216D5CE10030B45F /* GetArtwork.mm */; };
+		48F7F6F2216D5CE20030B45F /* GetCurrentTrack.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6EE216D5CE20030B45F /* GetCurrentTrack.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,7 +44,6 @@
 		485716741FFC2A9C00C2AE7F /* GetCurrentTrack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GetCurrentTrack; sourceTree = BUILT_PRODUCTS_DIR; };
 		485716771FFC2A9C00C2AE7F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4857167F1FFC2D8500C2AE7F /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
-		485716831FFC2E3500C2AE7F /* Spotify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Spotify.h; sourceTree = "<group>"; };
 		485716861FFC2EC900C2AE7F /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		485716871FFC306B00C2AE7F /* SpotifyPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpotifyPlayer.h; sourceTree = "<group>"; };
 		485716881FFC306B00C2AE7F /* SpotifyPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpotifyPlayer.m; sourceTree = "<group>"; };
@@ -63,6 +65,12 @@
 		48F7F6E4216D593A0030B45F /* GetArtwork.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GetArtwork.mm; sourceTree = "<group>"; };
 		48F7F6E5216D593A0030B45F /* GetCurrentTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetCurrentTrack.h; sourceTree = "<group>"; };
 		48F7F6E6216D593A0030B45F /* GetArtwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetArtwork.h; sourceTree = "<group>"; };
+		48F7F6EA216D5CE10030B45F /* GetState.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GetState.mm; sourceTree = "<group>"; };
+		48F7F6EB216D5CE10030B45F /* GetArtwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetArtwork.h; sourceTree = "<group>"; };
+		48F7F6EC216D5CE10030B45F /* GetArtwork.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GetArtwork.mm; sourceTree = "<group>"; };
+		48F7F6ED216D5CE20030B45F /* GetCurrentTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetCurrentTrack.h; sourceTree = "<group>"; };
+		48F7F6EE216D5CE20030B45F /* GetCurrentTrack.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GetCurrentTrack.mm; sourceTree = "<group>"; };
+		48F7F6EF216D5CE20030B45F /* GetState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetState.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,7 +126,6 @@
 		485716841FFC2E5300C2AE7F /* ScriptingBridgeHeaders */ = {
 			isa = PBXGroup;
 			children = (
-				485716831FFC2E3500C2AE7F /* Spotify.h */,
 			);
 			path = ScriptingBridgeHeaders;
 			sourceTree = "<group>";
@@ -165,6 +172,12 @@
 		48F7F6DF216D517F0030B45F /* Spotify */ = {
 			isa = PBXGroup;
 			children = (
+				48F7F6EB216D5CE10030B45F /* GetArtwork.h */,
+				48F7F6EC216D5CE10030B45F /* GetArtwork.mm */,
+				48F7F6ED216D5CE20030B45F /* GetCurrentTrack.h */,
+				48F7F6EE216D5CE20030B45F /* GetCurrentTrack.mm */,
+				48F7F6EF216D5CE20030B45F /* GetState.h */,
+				48F7F6EA216D5CE10030B45F /* GetState.mm */,
 			);
 			path = Spotify;
 			sourceTree = "<group>";
@@ -239,7 +252,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48F7F6F0216D5CE20030B45F /* GetState.mm in Sources */,
 				4857168F1FFC549100C2AE7F /* VOXPlayer.m in Sources */,
+				48F7F6F2216D5CE20030B45F /* GetCurrentTrack.mm in Sources */,
 				485716781FFC2A9C00C2AE7F /* main.m in Sources */,
 				4857168C1FFC4BC100C2AE7F /* iTunesPlayer.m in Sources */,
 				4804FD241FFE61C000819901 /* GetCurrentTrackApp.m in Sources */,
@@ -248,6 +263,7 @@
 				48F7F6D6216D2D450030B45F /* GetArtwork.mm in Sources */,
 				48F7F6DC216D36BD0030B45F /* ParsePseudoYaml.m in Sources */,
 				48F7F6D3216D2CDD0030B45F /* GetCurrentTrack.mm in Sources */,
+				48F7F6F1216D5CE20030B45F /* GetArtwork.mm in Sources */,
 				48F7F6E9216D593A0030B45F /* GetArtwork.mm in Sources */,
 				48F7F6DA216D2F660030B45F /* GetState.mm in Sources */,
 				48F7F6E8216D593A0030B45F /* GetCurrentTrack.mm in Sources */,
