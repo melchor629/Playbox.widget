@@ -47,6 +47,13 @@
  **/
 bool isRunning(NSString* _Nonnull bundleId);
 
+typedef enum _PlayerStatus {
+    PlayerStatusPlaying,
+    PlayerStatusPaused,
+    PlayerStatusStopped,
+    PlayerStatusClosed
+} PlayerStatus;
+
 /*!
  * Base class for a Player interface. Allows the service to
  * ask the needed information to a player.
@@ -54,9 +61,9 @@ bool isRunning(NSString* _Nonnull bundleId);
 @interface Player: NSObject
 
 /*!
- * @return <pre>true</pre> if the player is running and playing a song, <pre>false</pre> otherwise
+ * @return the player status
  **/
-- (bool) isPlaying;
+- (PlayerStatus) status;
 /*!
  * @brief Gets the metadata of the current song in that player.
  * @return A SongMetadata object filled with information about the current track.

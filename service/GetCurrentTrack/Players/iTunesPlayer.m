@@ -27,8 +27,19 @@ NSString* getBaseDirectory(NSString* extra);
     return _self;
 }
 
-- (bool) isPlaying {
-    return isRunning(@"com.apple.iTunes") && [[getStateScript state] isEqualToString:@"playing"];
+- (PlayerStatus) status {
+    if(isRunning(@"com.apple.iTunes")) {
+        NSString* state = [getStateScript state];
+        if([state isEqualToString:@"playing"]) {
+            return PlayerStatusPlaying;
+        } else if([state isEqualToString:@"stopped"]) {
+            return PlayerStatusStopped;
+        } else {
+            return PlayerStatusPaused;
+        }
+    }
+
+    return PlayerStatusClosed;
 }
 
 - (SongMetadata*) getMetadata {

@@ -27,8 +27,17 @@ NSString* getBaseDirectory(NSString* extra);
     return _self;
 }
 
-- (bool) isPlaying {
-    return isRunning(@"com.coppertino.Vox") && [getStateScript state] == 1;
+- (PlayerStatus) status {
+    if(isRunning(@"com.coppertino.Vox")) {
+        if([getStateScript state] == 1) {
+            return PlayerStatusPlaying;
+        } else {
+            //We will suppose that VOX is stopped
+            return PlayerStatusStopped;
+        }
+    }
+
+    return PlayerStatusClosed;
 }
 
 - (SongMetadata*) getMetadata {

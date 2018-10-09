@@ -11,7 +11,7 @@
 
 @interface VOXPlayer : Player
 
-- (bool) isPlaying;
+- (PlayerStatus) status;
 - (SongMetadata*) getMetadata;
 - (NSString*) getCover: (NSString*) basePath;
 - (NSString*) name;

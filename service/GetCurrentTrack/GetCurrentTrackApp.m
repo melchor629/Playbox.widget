@@ -67,7 +67,8 @@ NSString* getBaseDirectory(NSString* extra);
 - (Player*) getPlayingPlayer {
     for(NSUInteger i = 0; i < [players count]; i++) {
         Player* player = [players objectAtIndex:i];
-        if([player isPlaying]) {
+        PlayerStatus status = [player status];
+        if(status == PlayerStatusPlaying || status == PlayerStatusPaused) {
             return player;
         }
     }
@@ -147,12 +148,12 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
                             @"metadata": [last asDict],
                             @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : @"/Playbox.widget/lib/default.png",
                             @"songChanged": [NSNumber numberWithBool:songChanged],
-                            @"isPlaying": [NSNumber numberWithBool:true],
+                            @"status": [player status] == PlayerStatusPlaying ? @"playing" : @"paused",
                             @"player": [player name]
                             };
                 data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
             } else {
-                data = [NSJSONSerialization dataWithJSONObject:@{@"isPlaying": [NSNumber numberWithBool:false]} options:0 error:nil];
+                data = [NSJSONSerialization dataWithJSONObject:@{@"status": @"stopped"} options:0 error:nil];
             }
             const char headers[] =
                 "HTTP/1.1 200 OK\r\n"

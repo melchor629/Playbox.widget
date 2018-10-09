@@ -25,8 +25,19 @@
     return _self;
 }
 
-- (bool) isPlaying {
-    return isRunning(@"com.spotify.client") && [[getStateScript state] isEqualToString:@"playing"];
+- (PlayerStatus) status {
+    if(isRunning(@"com.spotify.client")) {
+        NSString* state = [getStateScript state];
+        if([state isEqualToString:@"playing"]) {
+            return PlayerStatusPlaying;
+        } else if([state isEqualToString:@"paused"]) {
+            return PlayerStatusPaused;
+        } else {
+            return PlayerStatusStopped;
+        }
+    }
+
+    return PlayerStatusClosed;
 }
 
 - (SongMetadata*) getMetadata {
