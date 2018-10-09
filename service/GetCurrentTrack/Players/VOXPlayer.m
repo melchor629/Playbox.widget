@@ -7,49 +7,47 @@
 //
 
 #import "VOXPlayer.h"
-#import "../ScriptingBridgeHeaders/VOX.h"
+#import "../Scripts/VOX/GetArtwork.h"
+#import "../Scripts/VOX/GetCurrentTrack.h"
+#import "../Scripts/VOX/GetState.h"
 
 NSString* getBaseDirectory(NSString* extra);
 
 @implementation VOXPlayer {
-    VOXApplication* app;
+    VOXGetArtworkScript* getArtworkScript;
+    VOXGetCurrentTrackScript* getCurrentTrackScript;
+    VOXGetStateScript* getStateScript;
 }
 
 - (instancetype) init {
     id _self = [super init];
-    app = [SBApplication applicationWithBundleIdentifier:@"com.coppertino.Vox"];
+    getArtworkScript = [[VOXGetArtworkScript alloc] init];
+    getCurrentTrackScript = [[VOXGetCurrentTrackScript alloc] init];
+    getStateScript = [[VOXGetStateScript alloc] init];
     return _self;
 }
 
 - (bool) isPlaying {
-    return isRunning(@"com.coppertino.Vox") && [app isRunning] && [app playerState] == 1;
+    return isRunning(@"com.coppertino.Vox") && [getStateScript state] == 1;
 }
 
 - (SongMetadata*) getMetadata {
-    id dict = @{
-                @"artist": [app artist],
-                @"albumArtist": [app albumArtist],
-                @"name": [app name],
-                @"album": [app album],
-                @"duration": [NSNumber numberWithDouble:[app totalTime]],
-                @"loved": @NO,
-                @"position": [NSNumber numberWithDouble:[app currentTime]]
-                };
-    return [[SongMetadata alloc] initWithDict:dict];
+    return [getCurrentTrackScript currentTrack];
 }
 
 - (NSString*) getCover: (NSString*) basePath {
-    NSData* rawData = [[app artworkImage] TIFFRepresentation];
-    if(rawData != nil) {
+    VOXArtwork artwork = [getArtworkScript artwork];
+    if(artwork.data != nil) {
+        SongMetadata* metadata = [self getMetadata];
         NSUInteger hash;
-        if([app album] != nil) {
-            hash = [[app album] hash];
+        if([metadata album] != nil) {
+            hash = [[metadata album] hash];
         } else {
-            hash = [[NSString stringWithFormat:@"%@::%@", [app artist], [app name]] hash];
+            hash = [[NSString stringWithFormat:@"%@::%@", [metadata artist], [metadata name]] hash];
         }
         NSString* path = [NSString stringWithFormat:@"%@/v%lx.tiff", basePath, hash];
         FILE* file = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
-        fwrite([rawData bytes], [rawData length], 1, file);
+        fwrite([artwork.data bytes], [artwork.data length], 1, file);
         fclose(file);
         return path;
     } else {

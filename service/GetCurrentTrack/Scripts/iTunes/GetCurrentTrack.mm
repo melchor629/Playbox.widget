@@ -1,5 +1,5 @@
 //
-//  iTunesGetCurrentTrackScript.m
+//  GetCurrentTrack.m
 //  GetCurrentTrack
 //
 //  Created by Melchor Garau Madrigal on 09/10/2018.
