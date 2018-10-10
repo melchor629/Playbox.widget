@@ -14,7 +14,7 @@ An example of request/response can be:
 
 ```
  $ curl localhost:45987
-{"isPlaying":true,"player":"iTunes","albumName":"What Went Down","isLoved":false,"artistName":"Foals","songName":"Mountain at My Gates","songDuration":244,"currentPosition":1,"coverUrl":"\/Playbox.widget\/lib\/covere58d3f4f97afdb18.jpg","songChanged":false}
+{"metadata":{"discNumber":null,"album":"Tumult","trackNumber":1,"position":5,"trackCount":null,"loved":false,"discCount":null,"year":null,"duration":498.827,"albumArtist":"MEUTE","artist":"MEUTE","genre":null,"name":"The Man with the Red Face"},"coverUrl":"http:\/\/i.scdn.co\/image\/e169b75e54b68dbe2957581272b4cbd97e31d4e8","status":"playing","songChanged":false,"player":"Spotify"}
 ```
 
 The artwork has different meanings depending of the player. In Spotify is the URL to the artwork, from the internet. In

@@ -26,7 +26,7 @@ NSString* getBaseDirectory(NSString* extra);
 #define checc(v, msg) {if((v) == -1) {NSLog(@"Failed in %s:%d: %s: %s\n", __FILE__, __LINE__, strerror(errno), msg);}}
 #define TSTR(x) #x
 #define TO_STRING(x) TSTR(x)
-#define PORT 45988
+#define PORT 45987
 #define PORT_STR TO_STRING(PORT)
 
 
