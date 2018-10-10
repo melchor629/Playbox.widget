@@ -10,7 +10,7 @@
 
 @interface GetCurrentTrackApp : NSObject
 
-- (void) loop;
+- (instancetype) initWithArgs: (NSDictionary*) args;
 - (void) cleanup;
 
 @end

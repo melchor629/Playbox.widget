@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "GetCurrentTrackApp.h"
+#import "Network/HTTPServer.h"
 #import "Players/Player.h"
 #import "Players/SpotifyPlayer.h"
 #import "Players/iTunesPlayer.h"
@@ -26,7 +27,7 @@ NSString* getBaseDirectory(NSString* extra);
 #define checc(v, msg) {if((v) == -1) {NSLog(@"Failed in %s:%d: %s: %s\n", __FILE__, __LINE__, strerror(errno), msg);}}
 #define TSTR(x) #x
 #define TO_STRING(x) TSTR(x)
-#define PORT 45987
+#define PORT 45988
 #define PORT_STR TO_STRING(PORT)
 
 
@@ -37,9 +38,10 @@ NSString* getBaseDirectory(NSString* extra);
     NSArray* players;
     NSString* pidFilePath;
     NSString* coverBasePath;
+    HTTPServer* server;
 }
 
-- (instancetype) init {
+- (instancetype) initWithArgs: (NSDictionary*) args {
     id _self = [super init];
     NSLog(@"Current working directory: %@", getBaseDirectory(nil));
     last = [[SongMetadata alloc] init];
@@ -61,6 +63,13 @@ NSString* getBaseDirectory(NSString* extra);
     FILE* pidFile = fopen([pidFilePath cStringUsingEncoding:NSUTF8StringEncoding], "w");
     fprintf(pidFile, "%d", pid);
     fclose(pidFile);
+
+    server = [[HTTPServer alloc] init];
+    [server setDelegate:self];
+    if(![server listenToAddress:@"::1" andPort:PORT]) {
+        [NSApp terminate:self];
+        exit(1);
+    }
 
     return _self;
 }
@@ -123,62 +132,27 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
     }
 }
 
-- (void) loop {
-    int sock = socket(PF_INET6, SOCK_STREAM, 0);
-
-    int opt = 1; //Avoid "Address already in use" error
-    setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char*) &opt, sizeof(opt));
-
-    struct sockaddr_in6 addr;
-    memset(&addr, 0, sizeof(addr));
-    addr.sin6_family = AF_INET6;
-    struct in6_addr a = IN6ADDR_LOOPBACK_INIT;
-    memcpy(&addr.sin6_addr, &a, sizeof(addr.sin6_addr));
-    addr.sin6_port = htons(PORT);
-    checc(bind(sock, (struct sockaddr*) &addr, sizeof(addr)), "Cannot bind to http://[::1]:" PORT_STR);
-
-    listen(sock, 10);
-    NSLog(@"Listening at http://[::1]:%s", PORT_STR);
-
-    while(!notInterrupted) {
-        int client;
-        checc(client = accept(sock, NULL, NULL), "Cannot accept a client :(");
-        @autoreleasepool {
-            Player* player = [self getPlayingPlayer];
-            [self checkForChanges: player];
-            NSData* data = nil;
-            if(player != nil) {
-                id dict = @{
-                            @"metadata": [last asDict],
-                            @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : @"/Playbox.widget/lib/default.png",
-                            @"songChanged": [NSNumber numberWithBool:songChanged],
-                            @"status": [player status] == PlayerStatusPlaying ? @"playing" : @"paused",
-                            @"player": [player name]
-                            };
-                data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
-            } else {
-                data = [NSJSONSerialization dataWithJSONObject:@{@"status": @"stopped"} options:0 error:nil];
-            }
-            const char headers[] =
-                "HTTP/1.1 200 OK\r\n"
-                "Content-Type: application/json; encoding=utf-8\r\n"
-                "Access-Control-Allow-Origin: *\r\n"
-                "\r\n";
-            write(client, headers, sizeof(headers) - 1);
-            ssize_t written = 0;
-            const void* outData = [data bytes];
-            size_t outLen = [data length];
-            while(written < outLen) {
-                written += write(client, outData + written, outLen - written);
-            }
-            shutdown(client, SHUT_RDWR);
-            close(client);
-        }
+- (void) request: (HTTPRequest*) req withResponse: (HTTPResponse*) res {
+    Player* player = [self getPlayingPlayer];
+    [self checkForChanges: player];
+    NSDictionary* dict = nil;
+    if(player != nil) {
+        dict = @{
+                 @"metadata": [last asDict],
+                 @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : @"/Playbox.widget/lib/default.png",
+                 @"songChanged": [NSNumber numberWithBool:songChanged],
+                 @"status": [player status] == PlayerStatusPlaying ? @"playing" : @"paused",
+                 @"player": [player name]
+                 };
+    } else {
+        dict = @{ @"status": @"stopped" };
     }
-    close(sock);
 
-    [self cleanup];
-    [NSApp terminate: self];
+    [res setValue:@"application/json; encoding=utf-8" forHeader:@"Content-Type"];
+    [res setValue:@"*" forHeader:@"Access-Control-Allow-Origin"];
+
+    [res writeData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]];
+    [res end];
 }
 
 - (void) cleanup {
@@ -191,6 +165,7 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
         [[NSFileManager defaultManager] removeItemAtPath:coverFileUrl error:nil];
     }
     [[NSFileManager defaultManager] removeItemAtPath:pidFilePath error:nil];
+    [server close];
 }
 
 @end
