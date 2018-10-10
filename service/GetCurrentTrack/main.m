@@ -23,12 +23,6 @@ NSString* getBaseDirectory(NSString* extra) {
     return extra ? [NSString stringWithFormat:@"%@/%@", nscwd, extra] : nscwd;
 }
 
-#define checc(v, msg) { \
-    if((v) == -1) { \
-        NSLog(@"Failed in %s:%d: %s: %s\n", __FILE__, __LINE__, strerror(errno), msg);\
-    } \
-}
-
 volatile bool notInterrupted = false;
 static void interruption(int signo) {
     notInterrupted = true;
@@ -39,7 +33,7 @@ static void run(bool daemonized) {
         signal(SIGINT, interruption);
         signal(SIGTERM, interruption);
         GetCurrentTrackApp* app = [[GetCurrentTrackApp alloc] init];
-        NSThread* thread = [[NSThread alloc] initWithTarget:app selector:@selector(loop:) object:daemonized ? app : nil];
+        NSThread* thread = [[NSThread alloc] initWithTarget:app selector:@selector(loop) object:nil];
         [thread start];
         id a = [NSApplication sharedApplication]; (void)a; //Trick to make isRunning() work
         [NSApp run];

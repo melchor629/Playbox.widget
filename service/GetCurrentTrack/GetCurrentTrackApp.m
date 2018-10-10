@@ -43,11 +43,12 @@ NSString* getBaseDirectory(NSString* extra);
     id _self = [super init];
     NSLog(@"Current working directory: %@", getBaseDirectory(nil));
     last = [[SongMetadata alloc] init];
-    players = [[NSMutableArray alloc] initWithObjects:
+    //Put here new player implementations
+    players = @[
                [[SpotifyPlayer alloc] init],
                [[iTunesPlayer alloc] init],
-               [[VOXPlayer alloc] init],
-               nil];
+               [[VOXPlayer alloc] init]
+               ];
     songChanged = false;
     pidFilePath = getBaseDirectory(@"Playbox.widget/lib/pidfile");
     coverBasePath = getBaseDirectory(@"Playbox.widget/covers");
@@ -92,6 +93,9 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
 
 - (bool) didCoverChange: (SongMetadata*) current {
     if(current.album != nil) {
+        if(current.albumArtist != nil) {
+            return !(areEqualsWithNil(current.albumArtist, last.albumArtist) && areEqualsWithNil(current.album, last.album));
+        }
         return !(areEqualsWithNil(current.artist, last.artist) && areEqualsWithNil(current.album, last.album));
     } else {
         return true;
@@ -119,7 +123,7 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
     }
 }
 
-- (void) loop: (bool) daemonized {
+- (void) loop {
     int sock = socket(PF_INET6, SOCK_STREAM, 0);
 
     int opt = 1; //Avoid "Address already in use" error
@@ -131,10 +135,10 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
     struct in6_addr a = IN6ADDR_LOOPBACK_INIT;
     memcpy(&addr.sin6_addr, &a, sizeof(addr.sin6_addr));
     addr.sin6_port = htons(PORT);
-    checc(bind(sock, (struct sockaddr*) &addr, sizeof(addr)), "Cannot bind to http://[::]:" PORT_STR);
+    checc(bind(sock, (struct sockaddr*) &addr, sizeof(addr)), "Cannot bind to http://[::1]:" PORT_STR);
 
     listen(sock, 10);
-    NSLog(@"Listening at http://[::]:%s", PORT_STR);
+    NSLog(@"Listening at http://[::1]:%s", PORT_STR);
 
     while(!notInterrupted) {
         int client;

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		4804FD241FFE61C000819901 /* GetCurrentTrackApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */; };
 		485716781FFC2A9C00C2AE7F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 485716771FFC2A9C00C2AE7F /* main.m */; };
-		485716801FFC2D8500C2AE7F /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4857167F1FFC2D8500C2AE7F /* ScriptingBridge.framework */; };
 		485716891FFC306B00C2AE7F /* SpotifyPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 485716881FFC306B00C2AE7F /* SpotifyPlayer.m */; };
 		4857168C1FFC4BC100C2AE7F /* iTunesPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4857168B1FFC4BC100C2AE7F /* iTunesPlayer.m */; };
 		4857168F1FFC549100C2AE7F /* VOXPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4857168E1FFC549100C2AE7F /* VOXPlayer.m */; };
@@ -43,7 +42,6 @@
 		4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GetCurrentTrackApp.m; sourceTree = "<group>"; };
 		485716741FFC2A9C00C2AE7F /* GetCurrentTrack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GetCurrentTrack; sourceTree = BUILT_PRODUCTS_DIR; };
 		485716771FFC2A9C00C2AE7F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		4857167F1FFC2D8500C2AE7F /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		485716861FFC2EC900C2AE7F /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		485716871FFC306B00C2AE7F /* SpotifyPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpotifyPlayer.h; sourceTree = "<group>"; };
 		485716881FFC306B00C2AE7F /* SpotifyPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpotifyPlayer.m; sourceTree = "<group>"; };
@@ -78,7 +76,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				485716801FFC2D8500C2AE7F /* ScriptingBridge.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,7 +104,6 @@
 			children = (
 				48F7F6D0216D2C580030B45F /* Scripts */,
 				485716851FFC2E9800C2AE7F /* Players */,
-				485716841FFC2E5300C2AE7F /* ScriptingBridgeHeaders */,
 				485716771FFC2A9C00C2AE7F /* main.m */,
 				4804FD221FFE61C000819901 /* GetCurrentTrackApp.h */,
 				4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */,
@@ -118,16 +114,8 @@
 		4857167E1FFC2D8500C2AE7F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4857167F1FFC2D8500C2AE7F /* ScriptingBridge.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		485716841FFC2E5300C2AE7F /* ScriptingBridgeHeaders */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ScriptingBridgeHeaders;
 			sourceTree = "<group>";
 		};
 		485716851FFC2E9800C2AE7F /* Players */ = {
