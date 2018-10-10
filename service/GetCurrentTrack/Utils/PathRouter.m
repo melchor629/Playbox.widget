@@ -78,7 +78,11 @@
                 pr.req.method = req->method;
                 pr.req.path = req->path;
                 pr.params = params;
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 [delegate performSelector:selector withObject:(__bridge id) (&pr) withObject:_res];
+#pragma clang diagnostic pop
             }
         }
     }
