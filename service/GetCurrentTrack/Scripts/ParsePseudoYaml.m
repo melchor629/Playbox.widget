@@ -18,7 +18,7 @@ static inline void init_vars() {
     }
 
     if(numberRegex == nil) {
-        numberRegex = [[NSRegularExpression alloc] initWithPattern:@"\\d+[.,]?\\d*"
+        numberRegex = [[NSRegularExpression alloc] initWithPattern:@"^\\d+([.,]\\d+(E\\d+)?)?$"
                                                            options:NSRegularExpressionCaseInsensitive
                                                              error:nil];
     }
