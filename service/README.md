@@ -35,9 +35,9 @@ So I ended up by doing the same the [original AppleScript][1] was doing, but in 
 To add a new player, you can [fill an issue][2] or make a [pull request][3].
 
 To add (in code) a new player you must create a new class extending from `Player` inside `GetCurrentTrack/Players` and
-adding an instance of it in the array of [GetCurrentTrackApp.m:47][4].
+adding an instance of it in the array of [GetCurrentTrackApp.m:51][4].
 
   [1]: https://github.com/Pe8er/Playbox.widget/blob/master/Playbox.widget/lib/Get%20Current%20Track.applescript
   [2]: https://github.com/melchor629/Playbox.widget/issues/new
   [3]: https://github.com/melchor629/Playbox.widget/compare
-  [4]: https://github.com/melchor629/Playbox.widget/blob/master/service/GetCurrentTrack/GetCurrentTrackApp.m#L47
+  [4]: https://github.com/melchor629/Playbox.widget/blob/master/service/GetCurrentTrack/GetCurrentTrackApp.m#L51

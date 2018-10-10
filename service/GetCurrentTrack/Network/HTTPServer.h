@@ -13,9 +13,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef struct _HTTPRequest {
-    const NSString* method;
-    const NSString* path;
-    const NSDictionary* headers;
+    NSString* method;
+    NSString* path;
+    NSDictionary* headers;
 } HTTPRequest;
 
 @protocol HTTPServerDelegate <NSObject>

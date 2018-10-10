@@ -11,7 +11,7 @@
 
 
 @implementation Player
-- (bool) isPlaying { return false; }
+- (PlayerStatus) status { return PlayerStatusClosed; }
 - (SongMetadata*) getMetadata { return nil; }
 - (NSString*) getCover: (NSString*) path { return nil; }
 - (NSString*) name { return nil; }
@@ -86,3 +86,18 @@ bool isRunning(NSString* bundleId) {
     }];
     return 0 < [[running filteredArrayUsingPredicate: predicate] count];
 }
+
+
+const char* const PlayerStatusString[] = {
+    "playing",
+    "paused",
+    "stopped",
+    "closed"
+};
+
+const NSString* PlayerStatusNSString[] = {
+    @"playing",
+    @"paused",
+    @"stopped",
+    @"closed"
+};

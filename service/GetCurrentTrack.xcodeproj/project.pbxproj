@@ -16,6 +16,8 @@
 		485D3AF6216E25B5002986AF /* ClientSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 485D3AF5216E25B5002986AF /* ClientSocket.m */; };
 		485D3AF9216E344D002986AF /* HTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 485D3AF8216E344D002986AF /* HTTPServer.m */; };
 		485D3AFC216E4860002986AF /* HTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 485D3AFB216E4860002986AF /* HTTPResponse.m */; };
+		485D3B00216E8A26002986AF /* NSDictionary+CaseInsensitive.m in Sources */ = {isa = PBXBuildFile; fileRef = 485D3AFF216E8A26002986AF /* NSDictionary+CaseInsensitive.m */; };
+		485D3B03216E8A75002986AF /* PathRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 485D3B02216E8A75002986AF /* PathRouter.m */; };
 		48F7F6D3216D2CDD0030B45F /* GetCurrentTrack.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6D2216D2CDD0030B45F /* GetCurrentTrack.mm */; };
 		48F7F6D6216D2D450030B45F /* GetArtwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6D5216D2D450030B45F /* GetArtwork.mm */; };
 		48F7F6DA216D2F660030B45F /* GetState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6D9216D2F660030B45F /* GetState.mm */; };
@@ -61,6 +63,10 @@
 		485D3AF8216E344D002986AF /* HTTPServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTTPServer.m; sourceTree = "<group>"; };
 		485D3AFA216E4860002986AF /* HTTPResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPResponse.h; sourceTree = "<group>"; };
 		485D3AFB216E4860002986AF /* HTTPResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HTTPResponse.m; sourceTree = "<group>"; };
+		485D3AFE216E8A26002986AF /* NSDictionary+CaseInsensitive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+CaseInsensitive.h"; sourceTree = "<group>"; };
+		485D3AFF216E8A26002986AF /* NSDictionary+CaseInsensitive.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CaseInsensitive.m"; sourceTree = "<group>"; };
+		485D3B01216E8A75002986AF /* PathRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathRouter.h; sourceTree = "<group>"; };
+		485D3B02216E8A75002986AF /* PathRouter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PathRouter.m; sourceTree = "<group>"; };
 		48F7F6D1216D2CDD0030B45F /* GetCurrentTrack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetCurrentTrack.h; sourceTree = "<group>"; };
 		48F7F6D2216D2CDD0030B45F /* GetCurrentTrack.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GetCurrentTrack.mm; sourceTree = "<group>"; };
 		48F7F6D4216D2D450030B45F /* GetArtwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetArtwork.h; sourceTree = "<group>"; };
@@ -114,6 +120,7 @@
 		485716761FFC2A9C00C2AE7F /* GetCurrentTrack */ = {
 			isa = PBXGroup;
 			children = (
+				485D3AFD216E89FA002986AF /* Utils */,
 				485D3AF0216E23EE002986AF /* Network */,
 				48F7F6D0216D2C580030B45F /* Scripts */,
 				485716851FFC2E9800C2AE7F /* Players */,
@@ -159,6 +166,17 @@
 				485D3AFB216E4860002986AF /* HTTPResponse.m */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		485D3AFD216E89FA002986AF /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				485D3AFE216E8A26002986AF /* NSDictionary+CaseInsensitive.h */,
+				485D3AFF216E8A26002986AF /* NSDictionary+CaseInsensitive.m */,
+				485D3B01216E8A75002986AF /* PathRouter.h */,
+				485D3B02216E8A75002986AF /* PathRouter.m */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		48F7F6D0216D2C580030B45F /* Scripts */ = {
@@ -273,6 +291,8 @@
 				4857168F1FFC549100C2AE7F /* VOXPlayer.m in Sources */,
 				48F7F6F2216D5CE20030B45F /* GetCurrentTrack.mm in Sources */,
 				485716781FFC2A9C00C2AE7F /* main.m in Sources */,
+				485D3B03216E8A75002986AF /* PathRouter.m in Sources */,
+				485D3B00216E8A26002986AF /* NSDictionary+CaseInsensitive.m in Sources */,
 				4857168C1FFC4BC100C2AE7F /* iTunesPlayer.m in Sources */,
 				485D3AF6216E25B5002986AF /* ClientSocket.m in Sources */,
 				4804FD241FFE61C000819901 /* GetCurrentTrackApp.m in Sources */,

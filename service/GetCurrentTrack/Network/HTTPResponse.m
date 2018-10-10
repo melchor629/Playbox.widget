@@ -7,28 +7,7 @@
 //
 
 #import "HTTPResponse.h"
-
-
-//Based on https://stackoverflow.com/questions/13607343/nsdictionary-case-insensitive-objectforkey#13607604
-@interface NSDictionary (NSDictionaryCaseInsensitive)
-- (id) objectForCaseInsensitiveKey: (NSString *)key;
-@end
-
-@implementation NSDictionary (NSDictionaryCaseInsensitive)
-
-- (id) objectForCaseInsensitiveKey: (NSString *) lkey {
-    NSSet<NSString*>* keyOrNot = [self keysOfEntriesPassingTest:^BOOL(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        return [key caseInsensitiveCompare:lkey] == NSOrderedSame;
-    }];
-
-    if([keyOrNot count] == 1) {
-        return [self objectForKey:[keyOrNot anyObject]];
-    }
-
-    return nil;
-}
-
-@end
+#import "../Utils/NSDictionary+CaseInsensitive.h"
 
 
 @implementation HTTPResponse {
@@ -68,6 +47,17 @@
 
 - (void) writeRawData: (const void*) ptr withLength: (NSUInteger) length {
     [body appendBytes:ptr length:length];
+}
+
+- (void) writeJsonAndEnd: (NSDictionary*) dict {
+    [self writeJsonAndEnd:dict withStatus:200];
+}
+
+- (void) writeJsonAndEnd: (NSDictionary*) dict withStatus: (NSUInteger) statusCode {
+    self.statusCode = statusCode;
+    NSData* data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    [self writeData:data];
+    [self end];
 }
 
 - (void) end {

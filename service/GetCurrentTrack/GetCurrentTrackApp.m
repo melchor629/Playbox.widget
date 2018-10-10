@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "GetCurrentTrackApp.h"
 #import "Network/HTTPServer.h"
+#import "Utils/PathRouter.h"
 #import "Players/Player.h"
 #import "Players/SpotifyPlayer.h"
 #import "Players/iTunesPlayer.h"
@@ -39,6 +40,7 @@ NSString* getBaseDirectory(NSString* extra);
     NSString* pidFilePath;
     NSString* coverBasePath;
     HTTPServer* server;
+    PathRouter* router;
 }
 
 - (instancetype) initWithArgs: (NSDictionary*) args {
@@ -70,6 +72,20 @@ NSString* getBaseDirectory(NSString* extra);
         [NSApp terminate:self];
         exit(1);
     }
+
+    router = [PathRouter pathRouterWithPaths:@[
+                                               @"/",
+                                               @"/player/(\\w+)",
+                                               @"/players/?",
+                                               @"/quit/?"
+                                               ]
+                                andSelectors:@[
+                                               @"requestAllPlayers:withResponse:",
+                                               @"requestPlayer:withResponse:",
+                                               @"requestListPlayers:withResponse:",
+                                               @"requestQuit:withResponse:"
+                                               ]];
+    router.delegate = self;
 
     return _self;
 }
@@ -133,6 +149,12 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
 }
 
 - (void) request: (HTTPRequest*) req withResponse: (HTTPResponse*) res {
+    if(![router performSelectorForRequest:req andResponse:res]) {
+        [res writeJsonAndEnd:@{ @"error": @"Unknown request", @"what": req->path } withStatus:404];
+    }
+}
+
+- (void) requestAllPlayers: (HTTPRequest*) req withResponse: (HTTPResponse*) res {
     Player* player = [self getPlayingPlayer];
     [self checkForChanges: player];
     NSDictionary* dict = nil;
@@ -141,7 +163,7 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
                  @"metadata": [last asDict],
                  @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : @"/Playbox.widget/lib/default.png",
                  @"songChanged": [NSNumber numberWithBool:songChanged],
-                 @"status": [player status] == PlayerStatusPlaying ? @"playing" : @"paused",
+                 @"status": PlayerStatusNSString[[player status]],
                  @"player": [player name]
                  };
     } else {
@@ -151,8 +173,58 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
     [res setValue:@"application/json; encoding=utf-8" forHeader:@"Content-Type"];
     [res setValue:@"*" forHeader:@"Access-Control-Allow-Origin"];
 
-    [res writeData:[NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]];
-    [res end];
+    [res writeJsonAndEnd:dict];
+}
+
+- (void) requestPlayer: (PathRequest*) req withResponse: (HTTPResponse*) res {
+    NSString* playerName = [req->params objectAtIndex:0];
+    NSPredicate* pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary<NSString*, id>* bindings) {
+        return [[evaluatedObject name] caseInsensitiveCompare: playerName] == NSOrderedSame;
+    }];
+    NSArray<Player*>* playersFiltered = [players filteredArrayUsingPredicate:pred];
+
+    if([playersFiltered count] == 0) {
+        [res writeJsonAndEnd:@{ @"error": @"Player not found", @"what": playerName } withStatus:404];
+        return;
+    }
+
+    Player* player = [playersFiltered objectAtIndex:0];
+    PlayerStatus status = [player status];
+    if(status != PlayerStatusClosed && status != PlayerStatusStopped) {
+        [res writeJsonAndEnd:@{
+                               @"metadata": [last asDict],
+                               @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : @"/Playbox.widget/lib/default.png",
+                               @"songChanged": [NSNumber numberWithBool:songChanged],
+                               @"status": PlayerStatusNSString[status],
+                               @"player": [player name]
+                               }];
+    } else {
+        [res writeJsonAndEnd:@{ @"status": PlayerStatusNSString[status], @"player": [player name] }];
+    }
+}
+
+- (void) requestListPlayers: (HTTPRequest*) req withResponse: (HTTPResponse*) res {
+    NSMutableArray* playerObjects = [[NSMutableArray alloc] init];
+    for(Player* player in players) {
+        [playerObjects addObject:@{
+                                   @"name": [player name],
+                                   @"status": PlayerStatusNSString[[player status]]
+                                   }];
+    }
+
+    [res writeJsonAndEnd:@{ @"players": playerObjects }];
+}
+
+- (void) requestQuit: (HTTPRequest*) req withResponse: (HTTPResponse*) res {
+    if([req->method caseInsensitiveCompare:@"POST"] == NSOrderedSame) {
+        NSLog(@"Requesting quit of daemon");
+        [res write:@"OK"];
+        [res end];
+        [self performSelector:@selector(cleanup) withObject:nil afterDelay:0.5];
+        [NSApp performSelector:@selector(terminate:) withObject:self afterDelay:0.5];
+    } else {
+        [res writeJsonAndEnd:@{ @"error": @"Unknown request", @"what": req->path } withStatus:404];
+    }
 }
 
 - (void) cleanup {
@@ -166,6 +238,7 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
     }
     [[NSFileManager defaultManager] removeItemAtPath:pidFilePath error:nil];
     [server close];
+    NSLog(@"Closing daemon...");
 }
 
 @end

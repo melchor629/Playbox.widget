@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) write: (NSString*) data;
 - (void) writeData: (NSData*) data;
 - (void) writeRawData: (const void*) ptr withLength: (NSUInteger) length;
+- (void) writeJsonAndEnd: (NSDictionary*) dict;
+- (void) writeJsonAndEnd: (NSDictionary*) dict withStatus: (NSUInteger) statusCode;
 - (void) end;
 
 @end
