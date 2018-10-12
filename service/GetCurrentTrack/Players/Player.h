@@ -54,6 +54,9 @@ typedef enum _PlayerStatus {
     PlayerStatusClosed
 } PlayerStatus;
 
+extern const char* _Nonnull const PlayerStatusString[];
+extern const NSString* _Nonnull PlayerStatusNSString[];
+
 /*!
  * Base class for a Player interface. Allows the service to
  * ask the needed information to a player.

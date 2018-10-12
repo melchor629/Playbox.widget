@@ -15,6 +15,7 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/event.h>
 
 NSString* getBaseDirectory(NSString* extra) {
     char* cwd = getcwd(NULL, 0);
@@ -23,30 +24,18 @@ NSString* getBaseDirectory(NSString* extra) {
     return extra ? [NSString stringWithFormat:@"%@/%@", nscwd, extra] : nscwd;
 }
 
-#define checc(v, msg) { \
-    if((v) == -1) { \
-        NSLog(@"Failed in %s:%d: %s: %s\n", __FILE__, __LINE__, strerror(errno), msg);\
-    } \
-}
-
-volatile bool notInterrupted = false;
 static void interruption(int signo) {
-    notInterrupted = true;
-}
-
-static void run(bool daemonized) {
-    @autoreleasepool {
-        signal(SIGINT, interruption);
-        signal(SIGTERM, interruption);
-        GetCurrentTrackApp* app = [[GetCurrentTrackApp alloc] init];
-        NSThread* thread = [[NSThread alloc] initWithTarget:app selector:@selector(loop:) object:daemonized ? app : nil];
-        [thread start];
-        id a = [NSApplication sharedApplication]; (void)a; //Trick to make isRunning() work
-        [NSApp run];
-    }
+    [NSApp terminate:nil];
 }
 
 int main(int argc, const char * argv[]) {
-    run(false);
+    signal(SIGINT, interruption);
+    signal(SIGTERM, interruption);
+    @autoreleasepool {
+        GetCurrentTrackApp* app = [[GetCurrentTrackApp alloc] initWithArgs:@{}];
+        id a = [NSApplication sharedApplication]; (void)a; //Trick to make isRunning() work
+        [NSApp run];
+        [app cleanup];
+    }
     return 0;
 }
