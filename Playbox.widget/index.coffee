@@ -23,19 +23,26 @@ options =
 
 command: (callback) ->
   errorCallback = (error) ->
-    callback null,
-      isPlaying: true
-      songName: "Daemon is not running"
-      artistName: "Check README.md for more info"
-      albumName: null
-      songDuration: 1
-      currentPosition: 1
+    obj =
+      status: 'playing'
+      metadata:
+        name: "Daemon is not running"
+        artist: "Check README.md for more info"
+        album: null
+        duration: 1
+        position: 1
       coverUrl: "/Playbox.widget/lib/default.png"
       player: "Nothing"
       songChanged: true
+    callback null, obj
 
   fetch('http://127.0.0.1:41417/http://[::1]:45987')
-    .then((res) -> res.json())
+    .then((res) ->
+      if not res.ok
+        throw res
+      else
+        res.json()
+    )
     .then((data) -> callback(null, data))
     .catch((error) -> errorCallback(error))
 
@@ -293,18 +300,23 @@ update: (output, domEl) ->
   if !output
     div.animate({opacity: 0}, 250, 'swing').hide(1)
   else
-    values = JSON.parse(output)
-    if not values.isPlaying
+    if typeof output is 'string'
+        values = JSON.parse(output)
+    else
+        values = output
+
+    if values.status isnt "playing"
       return div.animate({opacity: 0}, 250, 'swing').hide(1)
 
-    div.find('.artist').html(values.artistName)
-    div.find('.song').html(values.songName)
-    div.find('.album').html(values.albumName)
-    tDuration = values.songDuration
-    tPosition = values.currentPosition
+    metadata = values.metadata
+    div.find('.artist').html(metadata.albumArtist || metadata.artist)
+    div.find('.song').html(metadata.name)
+    div.find('.album').html(metadata.album)
+    tDuration = metadata.duration
+    tPosition = metadata.position
     tArtwork = values.coverUrl
-    songChanged = values.songChanged
-    isLoved = values.isLoved
+    songChanged = metadata.songChanged
+    isLoved = metadata.loved
     currArt = "/" + div.find('.art').css('background-image').split('/').slice(-3).join().replace(/\,/g, '/').slice(0,-1)
     tWidth = div.width()
     tCurrent = (tPosition / tDuration) * tWidth

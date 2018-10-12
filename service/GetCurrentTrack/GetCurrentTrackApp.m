@@ -29,15 +29,6 @@ NSString* getBaseDirectory(NSString* extra);
 #define PORT 45987
 #define PORT_STR TO_STRING(PORT)
 
-@implementation Player
-- (bool) isPlaying { return false; }
-- (SongMetadata*) getMetadata { return nil; }
-- (NSString*) getCover: (NSString*) path { return nil; }
-- (NSString*) name { return nil; }
-@end
-@implementation SongMetadata
-@end
-
 
 @implementation GetCurrentTrackApp {
     SongMetadata* last;
@@ -76,7 +67,8 @@ NSString* getBaseDirectory(NSString* extra);
 - (Player*) getPlayingPlayer {
     for(NSUInteger i = 0; i < [players count]; i++) {
         Player* player = [players objectAtIndex:i];
-        if([player isPlaying]) {
+        PlayerStatus status = [player status];
+        if(status == PlayerStatusPlaying || status == PlayerStatusPaused) {
             return player;
         }
     }
@@ -92,15 +84,15 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
 
 - (bool) didSongChange: (SongMetadata*) current {
     return !(
-             areEqualsWithNil(current.artistName, last.artistName) &&
-             areEqualsWithNil(current.songName, last.songName) &&
-             areEqualsWithNil(current.albumName, last.albumName)
+             areEqualsWithNil(current.artist, last.artist) &&
+             areEqualsWithNil(current.name, last.name) &&
+             areEqualsWithNil(current.album, last.album)
              );
 }
 
 - (bool) didCoverChange: (SongMetadata*) current {
-    if(current.albumName != nil) {
-        return !(areEqualsWithNil(current.artistName, last.artistName) && areEqualsWithNil(current.albumName, last.albumName));
+    if(current.album != nil) {
+        return !(areEqualsWithNil(current.artist, last.artist) && areEqualsWithNil(current.album, last.album));
     } else {
         return true;
     }
@@ -109,8 +101,6 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
 - (void) checkForChanges: (Player*) player {
     if(player != nil) {
         SongMetadata* current = [player getMetadata];
-        last.currentPosition = current.currentPosition;
-        last.isLoved = current.isLoved;
         if([self didSongChange:current]) {
             if([self didCoverChange:current]) {
                 if(oldCoverFileUrl != nil && ![[oldCoverFileUrl substringToIndex:4] isEqualToString:@"http"]) {
@@ -121,15 +111,11 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
                 coverFileUrl = [player getCover: coverBasePath];
             }
 
-            last.artistName = current.artistName;
-            last.albumName = current.albumName;
-            last.songName = current.songName;
-            last.songDuration = current.songDuration;
-            last.isLoved = current.isLoved;
             songChanged = true;
         } else {
             songChanged = false;
         }
+        last = current;
     }
 }
 
@@ -159,20 +145,15 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
             NSData* data = nil;
             if(player != nil) {
                 id dict = @{
-                            @"artistName": [last.artistName length] == 0 ? [NSNull null] : last.artistName,
-                            @"songName": [last.songName length] == 0 ? [NSNull null] : last.songName,
-                            @"albumName": [last.albumName length] == 0 ? [NSNull null] : last.albumName,
-                            @"songDuration": [NSNumber numberWithUnsignedInteger:last.songDuration],
-                            @"currentPosition": [NSNumber numberWithUnsignedInteger:last.currentPosition],
+                            @"metadata": [last asDict],
                             @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : @"/Playbox.widget/lib/default.png",
                             @"songChanged": [NSNumber numberWithBool:songChanged],
-                            @"isLoved": [NSNumber numberWithBool:last.isLoved],
-                            @"isPlaying": [NSNumber numberWithBool:true],
+                            @"status": [player status] == PlayerStatusPlaying ? @"playing" : @"paused",
                             @"player": [player name]
                             };
                 data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
             } else {
-                data = [NSJSONSerialization dataWithJSONObject:@{@"isPlaying": [NSNumber numberWithBool:false]} options:0 error:nil];
+                data = [NSJSONSerialization dataWithJSONObject:@{@"status": @"stopped"} options:0 error:nil];
             }
             const char headers[] =
                 "HTTP/1.1 200 OK\r\n"

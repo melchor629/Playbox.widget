@@ -7,39 +7,45 @@
 //
 
 #import "SpotifyPlayer.h"
-#import "../ScriptingBridgeHeaders/Spotify.h"
+#import "../Scripts/Spotify/GetArtwork.h"
+#import "../Scripts/Spotify/GetCurrentTrack.h"
+#import "../Scripts/Spotify/GetState.h"
 
 @implementation SpotifyPlayer {
-    SpotifyApplication* app;
+    SpotifyGetArtworkScript* getArtworkScript;
+    SpotifyGetCurrentTrackScript* getCurrentTrackScript;
+    SpotifyGetStateScript* getStateScript;
 }
 
 - (instancetype) init {
     id _self = [super init];
-    app = [SBApplication applicationWithBundleIdentifier:@"com.spotify.client"];
+    getArtworkScript = [[SpotifyGetArtworkScript alloc] init];
+    getCurrentTrackScript = [[SpotifyGetCurrentTrackScript alloc] init];
+    getStateScript = [[SpotifyGetStateScript alloc] init];
     return _self;
 }
 
-- (bool) isPlaying {
-    return isRunning(@"com.spotify.client") && [app isRunning] && [app playerState] == SpotifyEPlSPlaying;
+- (PlayerStatus) status {
+    if(isRunning(@"com.spotify.client")) {
+        NSString* state = [getStateScript state];
+        if([state isEqualToString:@"playing"]) {
+            return PlayerStatusPlaying;
+        } else if([state isEqualToString:@"paused"]) {
+            return PlayerStatusPaused;
+        } else {
+            return PlayerStatusStopped;
+        }
+    }
+
+    return PlayerStatusClosed;
 }
 
 - (SongMetadata*) getMetadata {
-    SongMetadata* metadata = [[SongMetadata alloc] init];
-    SpotifyTrack* currentTrack = [app currentTrack];
-    metadata.artistName = [currentTrack albumArtist];
-    if(metadata.artistName == nil || [metadata.artistName length] == 0) {
-        metadata.artistName = [currentTrack artist];
-    }
-    metadata.songName = [currentTrack name];
-    metadata.albumName = [currentTrack album];
-    metadata.songDuration = [currentTrack duration] / 1000;
-    metadata.isLoved = NO;
-    metadata.currentPosition = [app playerPosition];
-    return metadata;
+    return [getCurrentTrackScript currentTrack];
 }
 
 - (NSString*) getCover: (NSString*) basePath {
-    return [[app currentTrack] artworkUrl];
+    return [getArtworkScript artwork];
 }
 
 - (NSString*) name { return @"Spotify"; }

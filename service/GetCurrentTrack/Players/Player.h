@@ -15,18 +15,29 @@
  * Class that holds metadata information about a song
  **/
 @interface SongMetadata : NSObject
-    /*! @brief The album artist or artist of the song. Should not be `nil`. */
-    @property NSString* artistName;
-    /*! @brief The song/track name. Should not be `nil`. */
-    @property NSString* songName;
-    /*! @brief The album name of the song. Can be `nil`. */
-    @property NSString* albumName;
-    /*! @brief The duration of the song in seconds. */
-    @property NSInteger songDuration;
-    /*! @brief `true` if the song is loved/liked. */
-    @property bool isLoved;
-    /*! @brief The current playing position in seconds. */
-    @property NSInteger currentPosition;
+@property (readonly, nullable) NSString* albumArtist;
+/*! @brief The album name of the song. */
+@property (readonly, nullable) NSString* album;
+/*! @brief The album artist or artist of the song. */
+@property (readonly, nullable) NSString* artist;
+@property (readonly) NSUInteger discCount;
+@property (readonly) NSUInteger discNumber;
+/*! @brief The duration of the song in seconds. */
+@property (readonly) double duration;
+@property (readonly, nullable) NSString* genre;
+/*! @brief `true` if the song is loved/liked. */
+@property (readonly) bool loved;
+@property (readonly) NSUInteger trackCount;
+@property (readonly) NSUInteger trackNumber;
+@property (readonly) NSUInteger year;
+/*! @brief The song/track name. */
+@property (readonly, nonnull) NSString* name;
+/*! @brief The current playing position in seconds. */
+@property (readonly) NSInteger playerPosition;
+
+- (instancetype _Nonnull) init;
+- (instancetype _Nonnull) initWithDict: (NSDictionary* _Nonnull) dict;
+- (NSDictionary* _Nonnull) asDict;
 @end
 
 /*!
@@ -34,7 +45,14 @@
  * is running.
  * @return <pre>true</pre> if it is running
  **/
-bool isRunning(NSString* bundleId);
+bool isRunning(NSString* _Nonnull bundleId);
+
+typedef enum _PlayerStatus {
+    PlayerStatusPlaying,
+    PlayerStatusPaused,
+    PlayerStatusStopped,
+    PlayerStatusClosed
+} PlayerStatus;
 
 /*!
  * Base class for a Player interface. Allows the service to
@@ -43,15 +61,15 @@ bool isRunning(NSString* bundleId);
 @interface Player: NSObject
 
 /*!
- * @return <pre>true</pre> if the player is running and playing a song, <pre>false</pre> otherwise
+ * @return the player status
  **/
-- (bool) isPlaying;
+- (PlayerStatus) status;
 /*!
  * @brief Gets the metadata of the current song in that player.
  * @return A SongMetadata object filled with information about the current track.
  * @remark It suposes that the player is playing a song.
  **/
-- (SongMetadata*) getMetadata;
+- (SongMetadata* _Nonnull) getMetadata;
 /*!
  * @brief Gets a URL/path to the artwork cover.
  * If the album name is not <code>nil</code>, this method will return a path to a image absolute
@@ -61,12 +79,12 @@ bool isRunning(NSString* bundleId);
  * @param basePath The base path where the file must be placed
  * @return A path or an URL to an image
  **/
-- (NSString*) getCover: (NSString*) basePath;
+- (NSString* _Nonnull) getCover: (NSString* _Nonnull) basePath;
 /*!
  * @brief Gets the name of the player.
  * @return The name of the player.
  **/
-- (NSString*) name;
+- (NSString* _Nonnull) name;
 
 @end
 
