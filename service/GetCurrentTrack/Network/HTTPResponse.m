@@ -30,7 +30,7 @@
 }
 
 - (void) setValue: (NSString*) value forHeader: (NSString*) key {
-    [headers setValue:value forKey:key];
+    [headers setValue:value forKeyCaseInsensitive:key];
 }
 
 - (NSString*) valueForHeader: (NSString*) key {
@@ -77,6 +77,7 @@
     NSString* statusLine = [NSString stringWithFormat:@"HTTP/1.1 %lu :)\r\n", statusCode];
     [client writeAll:[statusLine dataUsingEncoding:NSUTF8StringEncoding]];
 
+    [headers setObject:@"close" forKey:@"Connection"];
     NSMutableString* headers = [[NSMutableString alloc] init];
     for(NSString* key in self->headers) {
         [headers appendString:key];

@@ -97,10 +97,10 @@
 
     dispatch_source_set_event_handler(acceptEvent, ^{
         ClientSocket* client = [self accept];
-        if(self->delegate) {
-            if([self->delegate respondsToSelector:@selector(newConnection:)]) {
-                [self->delegate performSelector:@selector(newConnection:) withObject:client];
-            }
+        if([self->delegate respondsToSelector:@selector(newConnection:)]) {
+            [self->delegate performSelector:@selector(newConnection:) withObject:client];
+        } else {
+            [client close];
         }
     });
     dispatch_resume(acceptEvent);

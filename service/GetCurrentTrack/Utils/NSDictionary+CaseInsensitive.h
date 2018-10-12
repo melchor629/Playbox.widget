@@ -13,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 //Based on https://stackoverflow.com/questions/13607343/nsdictionary-case-insensitive-objectforkey#13607604
 @interface NSDictionary (CaseInsensitive)
 
-- (id) objectForCaseInsensitiveKey: (NSString *)key;
+- (id) objectForCaseInsensitiveKey: (NSString* _Nonnull) key;
+- (void) setValue: (id _Nonnull) value forKeyCaseInsensitive: (NSString* _Nonnull) rkey;
 
 @end
 

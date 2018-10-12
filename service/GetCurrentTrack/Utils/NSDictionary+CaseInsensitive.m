@@ -10,16 +10,36 @@
 
 @implementation NSDictionary (NSDictionaryCaseInsensitive)
 
-- (id) objectForCaseInsensitiveKey: (NSString *) lkey {
+- (NSString* _Nullable) lookForRealKey: (NSString* _Nonnull) rkey {
     NSSet<NSString*>* keyOrNot = [self keysOfEntriesPassingTest:^BOOL(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        return [key caseInsensitiveCompare:lkey] == NSOrderedSame;
+        return [key caseInsensitiveCompare:rkey] == NSOrderedSame;
     }];
 
     if([keyOrNot count] == 1) {
-        return [self objectForKey:[keyOrNot anyObject]];
+        return [keyOrNot anyObject];
     }
 
     return nil;
+}
+
+- (id) objectForCaseInsensitiveKey: (NSString* _Nonnull) lkey {
+    NSString* key = [self lookForRealKey:lkey];
+
+    if(key != nil) {
+        return [self objectForKey:key];
+    }
+
+    return nil;
+}
+
+- (void) setValue: (id _Nonnull) value forKeyCaseInsensitive: (NSString* _Nonnull) rkey {
+    NSString* key = [self lookForRealKey:rkey];
+
+    if(key != nil) {
+        [self setValue: value forKey:key];
+    } else {
+        [self setValue: value forKey:rkey];
+    }
 }
 
 @end
