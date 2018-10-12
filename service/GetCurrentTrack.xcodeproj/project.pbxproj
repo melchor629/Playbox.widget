@@ -48,6 +48,7 @@
 		4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GetCurrentTrackApp.m; sourceTree = "<group>"; };
 		485716741FFC2A9C00C2AE7F /* GetCurrentTrack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GetCurrentTrack; sourceTree = BUILT_PRODUCTS_DIR; };
 		485716771FFC2A9C00C2AE7F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4857167F1FFC2D8500C2AE7F /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		485716861FFC2EC900C2AE7F /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		485716871FFC306B00C2AE7F /* SpotifyPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpotifyPlayer.h; sourceTree = "<group>"; };
 		485716881FFC306B00C2AE7F /* SpotifyPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpotifyPlayer.m; sourceTree = "<group>"; };
