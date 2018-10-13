@@ -13,6 +13,10 @@ cp "$PLAYBOX_PATH/me.melchor9000.getcurrenttrack.plist" ~/Library/LaunchAgents |
 sed -i '' s/\$USER/$USER/g $PLIST || error "Could not configure plist file"
 
 echo "Enabling launch daemon"
+if [ -f "$PLAYBOX_PATH/lib/pidfile" ]; then
+    curl http://localhost:45987/quit 2>/dev/null >/dev/null
+    sleep 1
+fi
 launchctl load -w $PLIST || error "Could not enable daemon"
 
 echo "Done :)"

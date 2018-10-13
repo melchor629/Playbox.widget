@@ -19,7 +19,7 @@
 
 NSString* getBaseDirectory(NSString* extra);
 
-#define PORT 45988
+#define PORT 45987
 
 
 @implementation GetCurrentTrackApp {
