@@ -46,30 +46,19 @@ NSString* getBaseDirectory(NSString* extra);
     return [getCurrentTrackScript currentTrack];
 }
 
-- (NSString*) getCover: (NSString*) basePath {
+- (SongCover*) getCover; {
     iTunesArtwork artwork = [getArtworkScript artwork];
     if(artwork.data != nil) {
-        SongMetadata* currentTrack = [self getMetadata];
-        const char* ext = "bin";
+        NSString* type = @"application/octet-stream";
         if(artwork.type == 'JPEG') {
-            ext = "jpg";
+            type = @"image/jpeg";
         } else if(artwork.type == 'PNG ') {
-            ext = "png";
+            type = @"image/png";
         } else if(artwork.type == 'TIFF') {
-            ext = "tiff";
+            type = @"image/tiff";
         }
-
-        NSUInteger hash;
-        if([currentTrack album] != nil) {
-            hash = [[currentTrack album] hash];
-        } else {
-            hash = [[NSString stringWithFormat:@"%@::%@", [currentTrack artist], [currentTrack name]] hash];
-        }
-        NSString* path = [NSString stringWithFormat:@"%@/i%lx.%s", basePath, hash, ext];
-        FILE* file = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
-        fwrite([artwork.data bytes], [artwork.data length], 1, file);
-        fclose(file);
-        return path;
+        return [SongCover coverWithData:(NSData*) artwork.data
+                                andType:type];
     } else {
         return nil;
     }

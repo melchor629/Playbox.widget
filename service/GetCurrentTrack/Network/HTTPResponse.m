@@ -41,12 +41,31 @@
     [self writeData:[data dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
+- (void) writeAndEnd: (NSString*) data {
+    [self writeDataAndEnd:[data dataUsingEncoding:NSUTF8StringEncoding]];
+}
+
 - (void) writeData: (NSData*) data {
     [self writeRawData:[data bytes] withLength:[data length]];
 }
 
+- (void) writeDataAndEnd: (NSData*) data {
+    [self writeRawDataAndEnd:[data bytes] withLength:[data length]];
+}
+
 - (void) writeRawData: (const void*) ptr withLength: (NSUInteger) length {
     [body appendBytes:ptr length:length];
+}
+
+-  (void) writeRawDataAndEnd: (const void*) ptr withLength: (NSUInteger) length {
+    if(!headersSent) {
+        [self sendHeadersWithLength:[body length] + length];
+    }
+
+    if([body length] > 0) {
+        [client writeAll:body];
+    }
+    [client writeAllRawData:ptr withLength:length];
 }
 
 - (void) writeJsonAndEnd: (NSDictionary*) dict {

@@ -13,7 +13,7 @@
 
 - (PlayerStatus) status;
 - (SongMetadata*) getMetadata;
-- (NSString*) getCover: (NSString*) basePath;
+- (SongCover*) getCover;
 - (NSString*) name;
 
 @end

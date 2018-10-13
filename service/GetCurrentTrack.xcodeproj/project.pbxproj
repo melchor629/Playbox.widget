@@ -18,6 +18,8 @@
 		485D3AFC216E4860002986AF /* HTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 485D3AFB216E4860002986AF /* HTTPResponse.m */; };
 		485D3B00216E8A26002986AF /* NSDictionary+CaseInsensitive.m in Sources */ = {isa = PBXBuildFile; fileRef = 485D3AFF216E8A26002986AF /* NSDictionary+CaseInsensitive.m */; };
 		485D3B03216E8A75002986AF /* PathRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 485D3B02216E8A75002986AF /* PathRouter.m */; };
+		4874BA8A2172213C00AAAAC0 /* GetCurrentTrackCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4874BA892172213C00AAAAC0 /* GetCurrentTrackCache.m */; };
+		488CC8ED21713DD7002F814D /* InMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 488CC8EC21713DD7002F814D /* InMemoryCache.m */; };
 		48F7F6D3216D2CDD0030B45F /* GetCurrentTrack.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6D2216D2CDD0030B45F /* GetCurrentTrack.mm */; };
 		48F7F6D6216D2D450030B45F /* GetArtwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6D5216D2D450030B45F /* GetArtwork.mm */; };
 		48F7F6DA216D2F660030B45F /* GetState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48F7F6D9216D2F660030B45F /* GetState.mm */; };
@@ -48,7 +50,6 @@
 		4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GetCurrentTrackApp.m; sourceTree = "<group>"; };
 		485716741FFC2A9C00C2AE7F /* GetCurrentTrack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GetCurrentTrack; sourceTree = BUILT_PRODUCTS_DIR; };
 		485716771FFC2A9C00C2AE7F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		4857167F1FFC2D8500C2AE7F /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		485716861FFC2EC900C2AE7F /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		485716871FFC306B00C2AE7F /* SpotifyPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpotifyPlayer.h; sourceTree = "<group>"; };
 		485716881FFC306B00C2AE7F /* SpotifyPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpotifyPlayer.m; sourceTree = "<group>"; };
@@ -68,6 +69,10 @@
 		485D3AFF216E8A26002986AF /* NSDictionary+CaseInsensitive.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CaseInsensitive.m"; sourceTree = "<group>"; };
 		485D3B01216E8A75002986AF /* PathRouter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathRouter.h; sourceTree = "<group>"; };
 		485D3B02216E8A75002986AF /* PathRouter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PathRouter.m; sourceTree = "<group>"; };
+		4874BA882172213C00AAAAC0 /* GetCurrentTrackCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetCurrentTrackCache.h; sourceTree = "<group>"; };
+		4874BA892172213C00AAAAC0 /* GetCurrentTrackCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GetCurrentTrackCache.m; sourceTree = "<group>"; };
+		488CC8EB21713DD7002F814D /* InMemoryCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InMemoryCache.h; sourceTree = "<group>"; };
+		488CC8EC21713DD7002F814D /* InMemoryCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InMemoryCache.m; sourceTree = "<group>"; };
 		48F7F6D1216D2CDD0030B45F /* GetCurrentTrack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetCurrentTrack.h; sourceTree = "<group>"; };
 		48F7F6D2216D2CDD0030B45F /* GetCurrentTrack.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GetCurrentTrack.mm; sourceTree = "<group>"; };
 		48F7F6D4216D2D450030B45F /* GetArtwork.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetArtwork.h; sourceTree = "<group>"; };
@@ -128,6 +133,8 @@
 				485716771FFC2A9C00C2AE7F /* main.m */,
 				4804FD221FFE61C000819901 /* GetCurrentTrackApp.h */,
 				4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */,
+				4874BA882172213C00AAAAC0 /* GetCurrentTrackCache.h */,
+				4874BA892172213C00AAAAC0 /* GetCurrentTrackCache.m */,
 			);
 			path = GetCurrentTrack;
 			sourceTree = "<group>";
@@ -176,6 +183,8 @@
 				485D3AFF216E8A26002986AF /* NSDictionary+CaseInsensitive.m */,
 				485D3B01216E8A75002986AF /* PathRouter.h */,
 				485D3B02216E8A75002986AF /* PathRouter.m */,
+				488CC8EB21713DD7002F814D /* InMemoryCache.h */,
+				488CC8EC21713DD7002F814D /* InMemoryCache.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -303,10 +312,12 @@
 				485716891FFC306B00C2AE7F /* SpotifyPlayer.m in Sources */,
 				48F7F6D6216D2D450030B45F /* GetArtwork.mm in Sources */,
 				48F7F6DC216D36BD0030B45F /* ParsePseudoYaml.m in Sources */,
+				488CC8ED21713DD7002F814D /* InMemoryCache.m in Sources */,
 				48F7F6D3216D2CDD0030B45F /* GetCurrentTrack.mm in Sources */,
 				48F7F6F1216D5CE20030B45F /* GetArtwork.mm in Sources */,
 				48F7F6E9216D593A0030B45F /* GetArtwork.mm in Sources */,
 				48F7F6DA216D2F660030B45F /* GetState.mm in Sources */,
+				4874BA8A2172213C00AAAAC0 /* GetCurrentTrackCache.m in Sources */,
 				48F7F6E8216D593A0030B45F /* GetCurrentTrack.mm in Sources */,
 				48F7F6E7216D593A0030B45F /* GetState.mm in Sources */,
 			);

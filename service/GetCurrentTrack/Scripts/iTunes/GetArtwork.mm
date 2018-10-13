@@ -12,7 +12,7 @@ static const char* code = R"AS(
 tell application "iTunes"
     set t to current track
     if (count of artworks of t) is not 0 then
-        data of artwork 1 of artworks of t
+        {format of artwork 1 of artworks of t, data of artwork 1 of artworks of t}
     end if
 end tell
 )AS";
@@ -32,7 +32,9 @@ end tell
 
 - (iTunesArtwork) artwork {
     NSAppleEventDescriptor* event = [script executeAndReturnError: nil];
-    return {[event descriptorType], [event data]};
+    NSAppleEventDescriptor* type = [event descriptorAtIndex:1];
+    NSAppleEventDescriptor* data = [event descriptorAtIndex:2];
+    return {[type typeCodeValue], [data data]};
 }
 
 @end

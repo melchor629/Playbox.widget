@@ -72,7 +72,7 @@
     size_t bytesWritten = 0;
     while(bytesWritten < size) {
         ssize_t bw = [self writeRawData:ptr + bytesWritten withLength:size - bytesWritten];
-        if(bw < 0) {
+        if(bw == 0) {
             return bytesWritten;
         }
         bytesWritten += bw;

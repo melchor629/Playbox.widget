@@ -15,20 +15,27 @@
  * Class that holds metadata information about a song
  **/
 @interface SongMetadata : NSObject
+//! The album artist of the song
 @property (readonly, nullable) NSString* albumArtist;
 /*! @brief The album name of the song. */
 @property (readonly, nullable) NSString* album;
 /*! @brief The album artist or artist of the song. */
 @property (readonly, nullable) NSString* artist;
+//! The number of discs of the album (0 for unknown)
 @property (readonly) NSUInteger discCount;
+//! The number of the disct of the song (0 for unknown)
 @property (readonly) NSUInteger discNumber;
 /*! @brief The duration of the song in seconds. */
 @property (readonly) double duration;
+//! The genre of the song (if known)
 @property (readonly, nullable) NSString* genre;
 /*! @brief `true` if the song is loved/liked. */
 @property (readonly) bool loved;
+//! The number of tracks of the disc (0 for unknown)
 @property (readonly) NSUInteger trackCount;
+//! The track number of the song in the disct (0 for unknown)
 @property (readonly) NSUInteger trackNumber;
+//! The year when the song was released (0 for unknown)
 @property (readonly) NSUInteger year;
 /*! @brief The song/track name. */
 @property (readonly, nonnull) NSString* name;
@@ -57,6 +64,15 @@ typedef enum _PlayerStatus {
 extern const char* _Nonnull const PlayerStatusString[];
 extern const NSString* _Nonnull PlayerStatusNSString[];
 
+@interface SongCover : NSObject
+@property (readonly, nullable) NSData* data;
+@property (readonly, nullable) NSString* type;
+
++ (instancetype _Nonnull) coverWithData: (NSData* _Nonnull) data andType: (NSString* _Nonnull) type;
++ (instancetype _Nonnull) coverWithUrl: (NSString* _Nonnull) url;
+
+@end
+
 /*!
  * Base class for a Player interface. Allows the service to
  * ask the needed information to a player.
@@ -74,15 +90,12 @@ extern const NSString* _Nonnull PlayerStatusNSString[];
  **/
 - (SongMetadata* _Nonnull) getMetadata;
 /*!
- * @brief Gets a URL/path to the artwork cover.
- * If the album name is not <code>nil</code>, this method will return a path to a image absolute
- * with its current working directory (gained from <code>NSString* getBaseDirectory(NSString* extra);</code>
- * in it, or return a URL to an image.
+ * @brief Gets a artwork cover.
+ * If the album name is not <code>nil</code>, this method will return an image or an URL to it.
  * @discussion If this method returns a path to a file, the file will be deleted in the future.
- * @param basePath The base path where the file must be placed
- * @return A path or an URL to an image
+ * @return An image or an URL to an image
  **/
-- (NSString* _Nonnull) getCover: (NSString* _Nonnull) basePath;
+- (SongCover* _Nullable) getCover;
 /*!
  * @brief Gets the name of the player.
  * @return The name of the player.

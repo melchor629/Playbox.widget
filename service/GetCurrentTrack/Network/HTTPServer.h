@@ -52,6 +52,8 @@ typedef struct _HTTPRequest {
 
 /*!
  @brief Listens for new requests at desired address and port.
+ @discussion You can listen to more than one address, the server
+ will listen to them.
  @param address IPv4 or IPv6 address to listen for requests.
  @param port Port to listen for requests.
  @return true if everything gone well, false otherwise.

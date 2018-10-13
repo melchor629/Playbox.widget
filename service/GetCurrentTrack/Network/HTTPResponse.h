@@ -55,6 +55,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void) write: (NSString* _Nonnull) data;
 
 /*!
+ @brief Sends some string to the client and ends the request.
+ @discussion
+ Writes some string to the client. The data stored in-memory will be sent first, and
+ this data will be sent directly.
+ @param data String to send to the the client.
+ */
+- (void) writeAndEnd: (NSString* _Nonnull) data;
+
+/*!
  @brief Sends some data to the client.
  @discussion
  Writes some data to the client. The data is stored in-memory to be sent when the
@@ -62,6 +71,15 @@ NS_ASSUME_NONNULL_BEGIN
  @param data Data to send to the client.
  */
 - (void) writeData: (NSData* _Nonnull) data;
+
+/*!
+ @brief Sends some data to the client and ends the request.
+ @discussion
+ Writes some data to the client. The data stored in-memory will be sent first, and
+ this data will be sent directly.
+ @param data Data to send to the client.
+ */
+- (void) writeDataAndEnd: (NSData* _Nonnull) data;
 
 /*!
  @brief Sends some data (in form of C pointer) to the client.
@@ -72,6 +90,16 @@ NS_ASSUME_NONNULL_BEGIN
  @param length Length of the data (in bytes).
  */
 - (void) writeRawData: (const void*) ptr withLength: (NSUInteger) length;
+
+/*!
+ @brief Sends some data (in form of C pointer) to the client and ends the request.
+ @discussion
+ Writes some data to the client. The data stored in-memory will be sent first, and
+ this data will be sent directly.
+ @param ptr Pointer to the data.
+ @param length Length of the data (in bytes).
+ */
+- (void) writeRawDataAndEnd: (const void*) ptr withLength: (NSUInteger) length;
 
 /*!
  @brief Sends a dictionary as JSON to the client.

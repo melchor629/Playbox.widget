@@ -7,6 +7,7 @@
 //
 
 #import "VOXPlayer.h"
+#import <Cocoa/Cocoa.h>
 #import "../Scripts/VOX/GetArtwork.h"
 #import "../Scripts/VOX/GetCurrentTrack.h"
 #import "../Scripts/VOX/GetState.h"
@@ -44,21 +45,11 @@ NSString* getBaseDirectory(NSString* extra);
     return [getCurrentTrackScript currentTrack];
 }
 
-- (NSString*) getCover: (NSString*) basePath {
+- (SongCover*) getCover {
     VOXArtwork artwork = [getArtworkScript artwork];
     if(artwork.data != nil) {
-        SongMetadata* metadata = [self getMetadata];
-        NSUInteger hash;
-        if([metadata album] != nil) {
-            hash = [[metadata album] hash];
-        } else {
-            hash = [[NSString stringWithFormat:@"%@::%@", [metadata artist], [metadata name]] hash];
-        }
-        NSString* path = [NSString stringWithFormat:@"%@/v%lx.tiff", basePath, hash];
-        FILE* file = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "w");
-        fwrite([artwork.data bytes], [artwork.data length], 1, file);
-        fclose(file);
-        return path;
+        return [SongCover coverWithData:(NSData*) artwork.data
+                                andType:@"image/tiff"];
     } else {
         return nil;
     }

@@ -44,8 +44,12 @@
     return [getCurrentTrackScript currentTrack];
 }
 
-- (NSString*) getCover: (NSString*) basePath {
-    return [getArtworkScript artwork];
+- (SongCover*) getCover {
+    NSString* url = [getArtworkScript artwork];
+    if(url != nil) {
+        return [SongCover coverWithUrl:url];
+    }
+    return nil;
 }
 
 - (NSString*) name { return @"Spotify"; }

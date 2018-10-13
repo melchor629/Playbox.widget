@@ -13,7 +13,7 @@
 @implementation Player
 - (PlayerStatus) status { return PlayerStatusClosed; }
 - (SongMetadata*) getMetadata { return nil; }
-- (NSString*) getCover: (NSString*) path { return nil; }
+- (SongCover*) getCover { return nil; }
 - (NSString*) name { return nil; }
 @end
 
@@ -74,6 +74,29 @@
              @"year": year > 0 ? [NSNumber numberWithUnsignedInteger:year] : [NSNull null],
              @"position": [NSNumber numberWithDouble:playerPosition]
              };
+}
+
+@end
+
+
+@implementation SongCover
+
+@synthesize data;
+@synthesize type;
+
++ (instancetype) coverWithData: (NSData*) data andType: (NSString*) type {
+    return [[SongCover alloc] initWithData:data andType:type];
+}
+
++ (instancetype) coverWithUrl: (NSString*) url {
+    return [[SongCover alloc] initWithData:[url dataUsingEncoding:NSUTF8StringEncoding] andType:@"url"];
+}
+
+- (instancetype) initWithData: (NSData*) data andType: (NSString*) type {
+    self = [super self];
+    self->data = data;
+    self->type = type;
+    return self;
 }
 
 @end

@@ -10,15 +10,25 @@
 #import "ServerSocket.h"
 
 @implementation HTTPServer {
-    ServerSocket* socket;
+    NSMutableArray<ServerSocket*>* sockets;
 }
 
 @synthesize delegate;
 
+- (instancetype) init {
+    self = [super init];
+    sockets = [[NSMutableArray alloc] initWithCapacity:2];
+    return self;
+}
+
 - (BOOL) listenToAddress: (NSString*) address andPort: (uint16_t) port {
-    socket = [[ServerSocket alloc] init];
+    ServerSocket* socket = [[ServerSocket alloc] init];
     [socket setDelegate:self];
-    return [socket listenToAddress:address andPort:port];
+    bool ok = [socket listenToAddress:address andPort:port];
+    if(ok) {
+        [sockets addObject:socket];
+    }
+    return ok;
 }
 
 - (void) newConnection: (ClientSocket*) client {
@@ -43,7 +53,7 @@
 
         NSString* key = [line substringToIndex:range.location];
         NSString* value = nil;
-        for(NSUInteger i = range.location; i < [line length]; i++) {
+        for(NSUInteger i = range.location + 1; i < [line length]; i++) {
             if([line characterAtIndex:i] != ' ') {
                 value = [line substringFromIndex:i];
                 break;
@@ -64,7 +74,9 @@
 }
 
 - (void) close {
-    [socket close];
+    for(ServerSocket* socket in sockets) {
+        [socket close];
+    }
 }
 
 - (NSString*) readLine: (ClientSocket*) client {

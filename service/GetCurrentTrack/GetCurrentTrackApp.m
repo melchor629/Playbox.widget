@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "GetCurrentTrackApp.h"
+#import "GetCurrentTrackCache.h"
 #import "Network/HTTPServer.h"
 #import "Utils/PathRouter.h"
 #import "Players/Player.h"
@@ -15,52 +16,32 @@
 #import "Players/iTunesPlayer.h"
 #import "Players/VOXPlayer.h"
 
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <string.h>
 
-extern volatile bool notInterrupted;
 NSString* getBaseDirectory(NSString* extra);
 
-#define checc(v, msg) {if((v) == -1) {NSLog(@"Failed in %s:%d: %s: %s\n", __FILE__, __LINE__, strerror(errno), msg);}}
-#define TSTR(x) #x
-#define TO_STRING(x) TSTR(x)
 #define PORT 45988
-#define PORT_STR TO_STRING(PORT)
 
 
 @implementation GetCurrentTrackApp {
-    SongMetadata* last;
-    bool songChanged;
-    NSString* coverFileUrl, *oldCoverFileUrl;
     NSArray* players;
     NSString* pidFilePath;
-    NSString* coverBasePath;
     HTTPServer* server;
     PathRouter* router;
+    GetCurrentTrackCache* cache;
 }
 
 - (instancetype) initWithArgs: (NSDictionary*) args {
     id _self = [super init];
     NSLog(@"Current working directory: %@", getBaseDirectory(nil));
-    last = [[SongMetadata alloc] init];
+
     //Put here new player implementations
     players = @[
                [[SpotifyPlayer alloc] init],
                [[iTunesPlayer alloc] init],
                [[VOXPlayer alloc] init]
                ];
-    songChanged = false;
-    pidFilePath = getBaseDirectory(@"Playbox.widget/lib/pidfile");
-    coverBasePath = getBaseDirectory(@"Playbox.widget/covers");
-    if(mkdir([coverBasePath cStringUsingEncoding:NSUTF8StringEncoding], 0733) != 0) {
-        [[NSFileManager defaultManager] removeItemAtPath:coverBasePath error:nil];
-        mkdir([coverBasePath cStringUsingEncoding:NSUTF8StringEncoding], 0733);
-    }
 
+    pidFilePath = getBaseDirectory(@"Playbox.widget/lib/pidfile");
     pid_t pid = getpid();
     FILE* pidFile = fopen([pidFilePath cStringUsingEncoding:NSUTF8StringEncoding], "w");
     fprintf(pidFile, "%d", pid);
@@ -72,80 +53,50 @@ NSString* getBaseDirectory(NSString* extra);
         [NSApp terminate:self];
         exit(1);
     }
+    NSLog(@"Server listening at http://%@:%u", @"[::1]", PORT);
+    if(![server listenToAddress:@"127.0.0.1" andPort:PORT]) {
+        [NSApp terminate:self];
+        exit(1);
+    }
+    NSLog(@"Server listening at http://%@:%u", @"127.0.0.1", PORT);
 
     router = [PathRouter pathRouterWithPaths:@[
                                                @"/",
-                                               @"/player/(\\w+)",
+                                               @"/artwork/?",
+                                               @"/player/(\\w+)/?",
+                                               @"/player/(\\w+)/artwork/?",
                                                @"/players/?",
                                                @"/quit/?"
                                                ]
                                 andSelectors:@[
                                                @"requestAllPlayers:withResponse:",
+                                               @"requestAllPlayersArtwork:withResponse:",
                                                @"requestPlayer:withResponse:",
+                                               @"requestPlayerArtwork:withResponse:",
                                                @"requestListPlayers:withResponse:",
                                                @"requestQuit:withResponse:"
                                                ]];
     router.delegate = self;
 
+    cache = [[GetCurrentTrackCache alloc] init];
+
     return _self;
 }
 
+//! Returns the first playing player available, or the first
+//! paused player if there's no other playing.
 - (Player*) getPlayingPlayer {
+    Player* pausedPlayer = nil;
     for(NSUInteger i = 0; i < [players count]; i++) {
         Player* player = [players objectAtIndex:i];
         PlayerStatus status = [player status];
-        if(status == PlayerStatusPlaying || status == PlayerStatusPaused) {
+        if(status == PlayerStatusPlaying) {
             return player;
+        } else if(status == PlayerStatusPaused) {
+            pausedPlayer = player;
         }
     }
-    return nil;
-}
-
-bool areEqualsWithNil(NSString* a, NSString* b) {
-    if(a == nil && b != nil) return false;
-    if(a != nil && b == nil) return false;
-    if(a == nil && b == nil) return true;
-    return [a isEqualToString:b];
-}
-
-- (bool) didSongChange: (SongMetadata*) current {
-    return !(
-             areEqualsWithNil(current.artist, last.artist) &&
-             areEqualsWithNil(current.name, last.name) &&
-             areEqualsWithNil(current.album, last.album)
-             );
-}
-
-- (bool) didCoverChange: (SongMetadata*) current {
-    if(current.album != nil) {
-        if(current.albumArtist != nil) {
-            return !(areEqualsWithNil(current.albumArtist, last.albumArtist) && areEqualsWithNil(current.album, last.album));
-        }
-        return !(areEqualsWithNil(current.artist, last.artist) && areEqualsWithNil(current.album, last.album));
-    } else {
-        return true;
-    }
-}
-
-- (void) checkForChanges: (Player*) player {
-    if(player != nil) {
-        SongMetadata* current = [player getMetadata];
-        if([self didSongChange:current]) {
-            if([self didCoverChange:current]) {
-                if(oldCoverFileUrl != nil && ![[oldCoverFileUrl substringToIndex:4] isEqualToString:@"http"]) {
-                    NSLog(@"Deleting %@", oldCoverFileUrl);
-                    [[NSFileManager defaultManager] removeItemAtPath:oldCoverFileUrl error:nil];
-                }
-                oldCoverFileUrl = coverFileUrl;
-                coverFileUrl = [player getCover: coverBasePath];
-            }
-
-            songChanged = true;
-        } else {
-            songChanged = false;
-        }
-        last = current;
-    }
+    return pausedPlayer;
 }
 
 - (void) request: (HTTPRequest*) req withResponse: (HTTPResponse*) res {
@@ -156,12 +107,19 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
 
 - (void) requestAllPlayers: (HTTPRequest*) req withResponse: (HTTPResponse*) res {
     Player* player = [self getPlayingPlayer];
-    [self checkForChanges: player];
     NSDictionary* dict = nil;
     if(player != nil) {
+        SongMetadata* metadata = [cache songMetadataForPlayer:player];
+        id cover = [cache songCoverForPlayer:player];
+        bool songChanged = [cache songChangedForPlayer:player];
+        NSString* host = [req->headers valueForKey:@"Host"];
+        if(host == nil) {
+            host = [NSString stringWithFormat:@"[::1]:%u", PORT];
+        }
+        NSString* coverUrl = [NSString stringWithFormat:@"http://%@/artwork", host];
         dict = @{
-                 @"metadata": [last asDict],
-                 @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : @"/Playbox.widget/lib/default.png",
+                 @"metadata": [metadata asDict],
+                 @"coverUrl": cover ? coverUrl : [NSNull null],
                  @"songChanged": [NSNumber numberWithBool:songChanged],
                  @"status": PlayerStatusNSString[[player status]],
                  @"player": [player name]
@@ -174,6 +132,29 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
     [res setValue:@"*" forHeader:@"Access-Control-Allow-Origin"];
 
     [res writeJsonAndEnd:dict];
+}
+
+- (void) requestAllPlayersArtwork: (HTTPRequest*) req withResponse: (HTTPResponse*) res {
+    Player* player = [self getPlayingPlayer];
+    if(player != nil) {
+        SongCover* cover = [cache songCoverForPlayer:player];
+        if(cover == nil) {
+            res.statusCode = 303;
+            [res setValue:@"/Playbox.widget/lib/default.png" forHeader:@"Location"];
+            [res end];
+        } else if([[cover type] isEqualToString:@"url"]) {
+            res.statusCode = 303;
+            [res setValue:[[NSString alloc] initWithData:cover.data encoding:NSUTF8StringEncoding]
+                forHeader:@"Location"];
+            [res end];
+        } else {
+            [res setValue:cover.type forHeader:@"Content-Type"];
+            [res writeDataAndEnd:cover.data];
+        }
+    } else {
+        res.statusCode = 404;
+        [res end];
+    }
 }
 
 - (void) requestPlayer: (PathRequest*) req withResponse: (HTTPResponse*) res {
@@ -191,15 +172,58 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
     Player* player = [playersFiltered objectAtIndex:0];
     PlayerStatus status = [player status];
     if(status != PlayerStatusClosed && status != PlayerStatusStopped) {
+        SongMetadata* metadata = [cache songMetadataForPlayer:player];
+        id cover = [cache songCoverForPlayer:player];
+        bool songChanged = [cache songChangedForPlayer:player];
+        NSString* host = [req->req.headers valueForKey:@"Host"];
+        if(host == nil) {
+            host = [NSString stringWithFormat:@"[::1]:%u", PORT];
+        }
+        NSString* coverUrl = [NSString stringWithFormat:@"http://%@/player/%@/artwork", host, playerName];
         [res writeJsonAndEnd:@{
-                               @"metadata": [last asDict],
-                               @"coverUrl": coverFileUrl ? [coverFileUrl stringByReplacingOccurrencesOfString:getBaseDirectory(nil) withString:@""] : @"/Playbox.widget/lib/default.png",
+                               @"metadata": [metadata asDict],
+                               @"coverUrl": cover ? coverUrl : [NSNull null],
                                @"songChanged": [NSNumber numberWithBool:songChanged],
                                @"status": PlayerStatusNSString[status],
                                @"player": [player name]
                                }];
     } else {
         [res writeJsonAndEnd:@{ @"status": PlayerStatusNSString[status], @"player": [player name] }];
+    }
+}
+
+- (void) requestPlayerArtwork: (PathRequest*) req withResponse: (HTTPResponse*) res {
+    NSString* playerName = [req->params objectAtIndex:0];
+    NSPredicate* pred = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary<NSString*, id>* bindings) {
+        return [[evaluatedObject name] caseInsensitiveCompare: playerName] == NSOrderedSame;
+    }];
+    NSArray<Player*>* playersFiltered = [players filteredArrayUsingPredicate:pred];
+
+    if([playersFiltered count] == 0) {
+        [res writeJsonAndEnd:@{ @"error": @"Player not found", @"what": playerName } withStatus:404];
+        return;
+    }
+
+    Player* player = [playersFiltered objectAtIndex:0];
+    PlayerStatus status = [player status];
+    if(status == PlayerStatusClosed || status == PlayerStatusStopped) {
+        res.statusCode = 400;
+        [res end];
+    } else {
+        SongCover* cover = [cache songCoverForPlayer:player];
+        if(cover == nil) {
+            res.statusCode = 303;
+            [res setValue:@"/Playbox.widget/lib/default.png" forHeader:@"Location"];
+            [res end];
+        } else if([[cover type] isEqualToString:@"url"]) {
+            res.statusCode = 303;
+            [res setValue:[[NSString alloc] initWithData:cover.data encoding:NSUTF8StringEncoding]
+                forHeader:@"Location"];
+            [res end];
+        } else {
+            [res setValue:cover.type forHeader:@"Content-Type"];
+            [res writeDataAndEnd:cover.data];
+        }
     }
 }
 
@@ -228,14 +252,6 @@ bool areEqualsWithNil(NSString* a, NSString* b) {
 }
 
 - (void) cleanup {
-    if(oldCoverFileUrl != nil && ![[oldCoverFileUrl substringToIndex:4] isEqualToString:@"http"]) {
-        NSLog(@"Deleting %@", oldCoverFileUrl);
-        [[NSFileManager defaultManager] removeItemAtPath:oldCoverFileUrl error:nil];
-    }
-    if(coverFileUrl != nil && ![[coverFileUrl substringToIndex:4] isEqualToString:@"http"]) {
-        NSLog(@"Deleting %@", coverFileUrl);
-        [[NSFileManager defaultManager] removeItemAtPath:coverFileUrl error:nil];
-    }
     [[NSFileManager defaultManager] removeItemAtPath:pidFilePath error:nil];
     [server close];
     NSLog(@"Closing daemon...");
