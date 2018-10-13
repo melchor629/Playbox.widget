@@ -16,6 +16,7 @@ typedef struct _HTTPRequest {
     NSString* method;
     NSString* path;
     NSDictionary* headers;
+    NSDictionary* query;
 } HTTPRequest;
 
 /*!

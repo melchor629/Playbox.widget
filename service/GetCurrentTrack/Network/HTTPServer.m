@@ -36,10 +36,31 @@
     NSString* method = [fields objectAtIndex:0];
     NSString* uri = [fields objectAtIndex:1];
     NSString* version = [fields objectAtIndex:2];
+    NSMutableDictionary<NSString*, NSString*>* query = nil;
 
     if(method == nil || uri == nil || version == nil) {
         [client close];
         return;
+    }
+
+    NSRange queryRange = [uri rangeOfString:@"?"];
+    if(queryRange.location != NSNotFound) {
+        NSString* queryString = [uri substringFromIndex:queryRange.location + 1];
+        uri = [uri substringToIndex:queryRange.location];
+
+        NSArray<NSString*>* queryComponents = [queryString componentsSeparatedByString:@"&"];
+        query = [[NSMutableDictionary alloc] initWithCapacity:[queryComponents count] / 2];
+        for(NSUInteger i = 0; i < [queryComponents count]; i++) {
+            NSString* comp = [queryComponents objectAtIndex:i];
+            NSUInteger equalsPos = [comp rangeOfString:@"="].location;
+            if(equalsPos != NSNotFound) {
+                NSString* key = [comp substringToIndex:equalsPos];
+                NSString* val = [comp substringFromIndex:equalsPos + 1];
+                [query setValue:val forKey:key];
+            } else {
+                [query setValue:@"" forKey:comp];
+            }
+        }
     }
 
     NSString* line = [self readLine:client];
@@ -66,7 +87,7 @@
     }
 
     HTTPResponse* res = [[HTTPResponse alloc] initWithClient:client];
-    HTTPRequest req = { method, uri, headers };
+    HTTPRequest req = { method, uri, headers, query };
     if(delegate != nil && [delegate respondsToSelector:@selector(request:withResponse:)]) {
         [delegate performSelector:@selector(request:withResponse:) withObject:(__bridge id) (&req) withObject:res];
     }

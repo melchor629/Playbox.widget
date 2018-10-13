@@ -35,9 +35,19 @@ So I ended up by doing the same the [original AppleScript][1] was doing, but in 
 To add a new player, you can [fill an issue][2] or make a [pull request][3].
 
 To add (in code) a new player you must create a new class extending from `Player` inside `GetCurrentTrack/Players` and
-adding an instance of it in the array of [GetCurrentTrackApp.m:51][4].
+adding an instance of it in the array of [GetCurrentTrackApp.m:38][4].
+
+## API
+
+ - `/`: Gets the current playing song of any of the players
+ - `/artwork`: Gets the artwork of the playing song or HTTP status 404 if there's no one
+ - `/player/:playerName`: Gets the current playing song for the desired player (name case insensitive).
+ - `/player/:playerName/artwork`: Gets the artwork of the desired player or HTTP status 404 if there's no one.
+ - `/players`: Gets a list of available players and their status.
+ - `/quit`: After 0.5s, the server/daemon will close.
+
 
   [1]: https://github.com/Pe8er/Playbox.widget/blob/master/Playbox.widget/lib/Get%20Current%20Track.applescript
   [2]: https://github.com/melchor629/Playbox.widget/issues/new
   [3]: https://github.com/melchor629/Playbox.widget/compare
-  [4]: https://github.com/melchor629/Playbox.widget/blob/master/service/GetCurrentTrack/GetCurrentTrackApp.m#L51
+  [4]: https://github.com/melchor629/Playbox.widget/blob/master/service/GetCurrentTrack/GetCurrentTrackApp.m#38

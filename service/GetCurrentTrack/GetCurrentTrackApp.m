@@ -139,8 +139,7 @@ NSString* getBaseDirectory(NSString* extra);
     if(player != nil) {
         SongCover* cover = [cache songCoverForPlayer:player];
         if(cover == nil) {
-            res.statusCode = 303;
-            [res setValue:@"/Playbox.widget/lib/default.png" forHeader:@"Location"];
+            res.statusCode = 400;
             [res end];
         } else if([[cover type] isEqualToString:@"url"]) {
             res.statusCode = 303;
@@ -148,6 +147,8 @@ NSString* getBaseDirectory(NSString* extra);
                 forHeader:@"Location"];
             [res end];
         } else {
+            [res setValue:@"no-store, must-revalidate" forHeader:@"Cache-Control"];
+            [res setValue:@"0" forHeader:@"Expires"];
             [res setValue:cover.type forHeader:@"Content-Type"];
             [res writeDataAndEnd:cover.data];
         }
@@ -212,8 +213,7 @@ NSString* getBaseDirectory(NSString* extra);
     } else {
         SongCover* cover = [cache songCoverForPlayer:player];
         if(cover == nil) {
-            res.statusCode = 303;
-            [res setValue:@"/Playbox.widget/lib/default.png" forHeader:@"Location"];
+            res.statusCode = 400;
             [res end];
         } else if([[cover type] isEqualToString:@"url"]) {
             res.statusCode = 303;
@@ -221,6 +221,8 @@ NSString* getBaseDirectory(NSString* extra);
                 forHeader:@"Location"];
             [res end];
         } else {
+            [res setValue:@"no-store, must-revalidate" forHeader:@"Cache-Control"];
+            [res setValue:@"0" forHeader:@"Expires"];
             [res setValue:cover.type forHeader:@"Content-Type"];
             [res writeDataAndEnd:cover.data];
         }

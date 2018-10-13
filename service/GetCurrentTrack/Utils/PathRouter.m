@@ -76,6 +76,7 @@
                 PathRequest pr;
                 pr.req.headers = req->headers;
                 pr.req.method = req->method;
+                pr.req.query = req->query;
                 pr.req.path = req->path;
                 pr.params = params;
 

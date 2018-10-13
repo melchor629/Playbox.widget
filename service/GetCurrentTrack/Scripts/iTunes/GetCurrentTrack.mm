@@ -14,6 +14,8 @@ static const char* code = R"AS(
 on getOrNull(value)
     if value is "" or value is 0 then
         return "null"
+    else if class of value is text then
+        return quote & value & quote
     else
         return value
     end if

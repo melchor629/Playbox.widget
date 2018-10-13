@@ -21,6 +21,9 @@ options =
   # Stick the widget in the corner? Set to *true* if you're using it with Sidebar widget, set to *false* if you'd like to give it some breathing room and a drop shadow.
   stickInCorner: false                  # true | false
 
+  # Only show current song from that app (ignore others). A value different from false will apply only for that player.
+  playerApp: false                      # false | "spotify" | "itunes" | "vox"
+
 command: (callback) ->
   errorCallback = (error) ->
     obj =
@@ -36,7 +39,10 @@ command: (callback) ->
       songChanged: true
     callback null, obj
 
-  fetch('http://127.0.0.1:41417/http://[::1]:45987')
+  url = 'http://[::1]:45987'
+  if options.playerApp
+    url = "#{url}/player/#{options.playerApp}"
+  fetch("http://127.0.0.1:41417/#{url}")
     .then((res) ->
       if not res.ok
         throw res
@@ -314,22 +320,19 @@ update: (output, domEl) ->
     div.find('.album').html(metadata.album)
     tDuration = metadata.duration
     tPosition = metadata.position
-    tArtwork = values.coverUrl
+    tArtwork = values.coverUrl || "http://#{location.host}/Playbox.widget/lib/default.png"
     songChanged = metadata.songChanged
     isLoved = metadata.loved
-    currArt = "/" + div.find('.art').css('background-image').split('/').slice(-3).join().replace(/\,/g, '/').slice(0,-1)
+    currArt = div.find('.art').css('background-image').split('"')[1].split('?')[0]
     tWidth = div.width()
     tCurrent = (tPosition / tDuration) * tWidth
     div.find('.progress').css width: tCurrent
 
     div.show(1).animate({opacity: 1}, 250, 'swing')
 
-    if currArt isnt tArtwork and tArtwork
+    if currArt isnt tArtwork or songChanged
       artwork = div.find('.art')
-      artwork.css('background-image', 'url('+tArtwork+')')
-    else if not tArtwork
-      artwork = div.find('.art')
-      artwork.css('background-image', 'url(/Playbox.widget/lib/default.png)')
+      artwork.css('background-image', 'url("'+tArtwork+'?_no_cache='+Math.random()+'")')
 
     if songChanged and @options.metaPosition is 'inside' and @options.widgetVariant isnt 'small'
       @showMeta div

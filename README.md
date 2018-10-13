@@ -18,6 +18,7 @@ This widget shows currently played song in either iTunes or Spotify. It has a sp
 - Easy way to toggle the widget's visibility.
 - Easy way to position the widget on the screen.
 - Spiffy fade animations all over the place.
+- Show only one player, of your selection, or all available
 - Uses less CPU than original.
 - Uses a background service to detect song information. [See more](https://github.com/melchor629/Playbox.widget/blob/master/service/README.md)
 
@@ -52,6 +53,9 @@ Here's how you can set all the widget's options. Open `index.coffee` and look at
 
   # Stick the widget in the corner? Set to *true* if you're using it with Sidebar widget, set to *false* if you'd like to give it some breathing room and a drop shadow.
   stickInCorner: false                  # true | false
+
+  # Only show current song from that app (ignore others). A value different from false will apply only for that player.
+  playerApp: false                      # false | "spotify" | "itunes" | "vox"
 ```
 
 ## [Download Playbox][1]

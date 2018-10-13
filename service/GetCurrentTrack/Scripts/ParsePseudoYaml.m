@@ -57,7 +57,11 @@ NSDictionary* pseudoYaml_parse(NSString* yaml) {
                 [res setObject:[[NSNumber alloc] initWithDouble:[newValue doubleValue]] forKey:key];
             }
         } else if(![value isEqualToString:@"null"]) {
-            [res setObject:value forKey:key];
+            if([value characterAtIndex:0] == '"' && [value characterAtIndex:[value length] - 1] == '"') {
+                [res setObject:[value substringWithRange:NSMakeRange(1, [value length] - 2)] forKey:key];
+            } else {
+                [res setObject:value forKey:key];
+            }
         }
     }
 
