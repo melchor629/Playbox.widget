@@ -36,7 +36,14 @@
 - (SongCover* _Nullable) songCoverForPlayer: (Player*) player {
     SongMetadata* metadata = [self songMetadataForPlayer:player];
     if(metadata != nil) {
-        return [cache valueForKey:[self cacheKeyForCoverArt:metadata andPlayer:player]];
+        SongCover* cover = [cache valueForKey:[self cacheKeyForCoverArt:metadata andPlayer:player]];
+        if(cover == nil) {
+            cover = [player getCover];
+            [cache setValue:cover
+                     forKey:[self cacheKeyForCoverArt:metadata andPlayer:player]
+             withExpiration:metadata.duration * 2];
+        }
+        return cover;
     }
     return nil;
 }

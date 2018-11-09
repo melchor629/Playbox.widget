@@ -87,11 +87,16 @@
     [self check];
     CacheEntry* entry = [cache valueForKey:key];
     if(entry == nil) {
+        if(value == nil) return;
         entry = [CacheEntry entryWithValue:value];
         [cache setValue:entry forKey:key];
     } else {
-        entry.value = value;
-        entry.expiration = NAN;
+        if(value == nil) {
+            [cache removeObjectForKey:key];
+        } else {
+            entry.value = value;
+            entry.expiration = NAN;
+        }
     }
 }
 
@@ -99,11 +104,16 @@
     [self check];
     CacheEntry* entry = [cache valueForKey:key];
     if(entry == nil) {
+        if(value == nil) return;
         entry = [CacheEntry entryWithValue:value andExpiration:exp];
         [cache setValue:entry forKey:key];
     } else {
-        entry.value = value;
-        entry.expiration = exp;
+        if(value == nil) {
+            [cache removeObjectForKey:key];
+        } else {
+            entry.value = value;
+            entry.expiration = exp;
+        }
     }
 }
 
