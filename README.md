@@ -34,28 +34,28 @@ This widget shows currently played song in either iTunes or Spotify. It has a sp
 
 # Options
 
-Here's how you can set all the widget's options. Open `index.coffee` and look at the very top of the document:
+Here's how you can set all the widget's options. Open `index.jsx` and look at the very top of the document:
 
-```coffeescript
-  # Choose where the widget should sit on your screen.
-  verticalPosition    : "bottom"        # top | bottom | center
-  horizontalPosition    : "left"        # left | right | center
-  margin: "80px"                        # Sets a margin at the `verticalPosition'
+```js
+  // Choose where the widget should sit on your screen.
+  verticalPosition: "bottom",           // top | bottom
+  horizontalPosition: "left",           // left | right
+  margin: 80,                           // Sets a margin at the `verticalPosition' (in pixels)
 
-  # Choose widget size.
-  widgetVariant: "large"                # large | medium | small
+  // Choose widget size.
+  widgetVariant: "large",               // large | medium | small
 
-  # Choose color theme.
-  widgetTheme: "dark"                   # dark | light
+  // Choose color theme.
+  widgetTheme: "dark",                  // dark | light
 
-  # Song metadata inside or outside? Applies to large and medium variants only.
-  metaPosition: "inside"                # inside | outside
+  // Song metadata inside or outside? Applies to large and medium variants only.
+  metaPosition: "inside",               // inside | outside
 
-  # Stick the widget in the corner? Set to *true* if you're using it with Sidebar widget, set to *false* if you'd like to give it some breathing room and a drop shadow.
-  stickInCorner: false                  # true | false
+  // Stick the widget in the corner? Set to *true* if you're using it with Sidebar widget, set to *false* if you'd like to give it some breathing room and a drop shadow.
+  stickInCorner: false,                 // true | false
 
-  # Only show current song from that app (ignore others). A value different from false will apply only for that player.
-  playerApp: false                      # false | "spotify" | "itunes" | "vox"
+  // Only show current song from that app (ignore others). A value different from false will apply only for that player.
+  playerApp: false,                     // false | "spotify" | "itunes" | "vox"
 ```
 
 ## [Download Playbox][1]
