@@ -32,7 +32,7 @@ const options = {
 export const initialState = { status: 'stopped' };
 
 export const command = (dispatch) => {
-  let url = 'http://127.0.0.1:45988';
+  let url = 'http://127.0.0.1:45987';
   if(options.playerApp) {
     url = `${url}/player/${options.playerApp}`
   }
