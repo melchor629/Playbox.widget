@@ -4,6 +4,7 @@
  * Haphazardly adjusted and mangled by Pe8er (https://github.com/Pe8er)
  * Forked by melchor629 (https://github.com/melchor629)
  */
+// ~ Version: 2.0 ~
 import { css } from "uebersicht";
 
 const options = {
@@ -379,6 +380,14 @@ export const render = ({ status, metadata, coverUrl, showMetadata, previousState
     meta = previousState.metadata;
     cover = previousState.coverUrl;
     hide = true;
+  }
+
+  if(meta === undefined) {
+    meta = {
+      position: 0,
+      duration: 1,
+      loved: false,
+    };
   }
 
   const progress = (meta.position / meta.duration) * 100;
