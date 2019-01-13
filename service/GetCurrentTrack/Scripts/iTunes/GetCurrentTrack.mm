@@ -21,6 +21,7 @@ on getOrNull(value)
     end if
 end getOrNull
 
+with timeout of 0.5 seconds
 tell application "iTunes"
     set t to current track
     "artist: " & my getOrNull(artist of t) & "
@@ -36,6 +37,7 @@ trackNumber: " & my getOrNull(track number of t) & "
 year: " & year of t & "
 position: " & player position as text
 end tell
+end timeout
 )AS";
 
 
@@ -55,6 +57,9 @@ end tell
 - (SongMetadata*) currentTrack {
     NSAppleEventDescriptor* event = [script executeAndReturnError: nil];
     NSString* yaml = [event stringValue];
+    if(yaml == nil) {
+        return nil;
+    }
     NSDictionary* dict = pseudoYaml_parse(yaml);
     return [[SongMetadata alloc] initWithDict:dict];
 }

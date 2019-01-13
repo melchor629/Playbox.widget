@@ -36,11 +36,11 @@
 - (SongCover* _Nullable) songCoverForPlayer: (Player*) player {
     SongMetadata* metadata = [self songMetadataForPlayer:player];
     if(metadata != nil) {
-        SongCover* cover = [cache valueForKey:[self cacheKeyForCoverArt:metadata andPlayer:player]];
+        SongCover* cover = [cache valueForKey:[self cacheKeyForCoverArt:metadata]];
         if(cover == nil) {
             cover = [player getCover];
             [cache setValue:cover
-                     forKey:[self cacheKeyForCoverArt:metadata andPlayer:player]
+                     forKey:[self cacheKeyForCoverArt:metadata]
              withExpiration:metadata.duration * 2];
         }
         return cover;
@@ -48,26 +48,20 @@
     return nil;
 }
 
-- (bool) songChangedForPlayer: (Player*) player {
-    return [[cache valueForKey:[self cacheKeyForSongChanged:player]] boolValue];
+- (SongCover* _Nullable) songCoverForMetadata: (SongMetadata*) metadata {
+    return [cache valueForKey:[self cacheKeyForCoverArt:metadata]];
 }
 
 
 
-- (NSString*) cacheKeyForCoverArt: (SongMetadata*) song andPlayer: (Player*) player {
-    return [NSString stringWithFormat:@"cover|%@|%@|%@",
-            [player name],
-            song.albumArtist ? song.albumArtist : song.artist,
-            song.album];
+- (NSString*) cacheKeyForCoverArt: (SongMetadata*) song {
+    return [NSString stringWithFormat:@"cover|%@|%@",
+            song.albumArtist ? song.albumArtist : (song.artist ? song.artist : @"unknown"),
+            song.album ? song.album : @"unknown"];
 }
 
 - (NSString*) cacheKeyForMetadata: (Player*) player {
     return [NSString stringWithFormat:@"metadata|%@",
-            [[player name] lowercaseString]];
-}
-
-- (NSString*) cacheKeyForSongChanged: (Player*) player {
-    return [NSString stringWithFormat:@"metadata|changed|%@",
             [[player name] lowercaseString]];
 }
 
@@ -99,21 +93,18 @@ static bool areEqualsWithNil(NSString* a, NSString* b) {
     }
 }
 
-- (void) checkForChanges: (Player*) player metadata: (SongMetadata*) current {
+- (void) checkForChanges: (Player*) player metadata: (SongMetadata* _Nullable) current {
+    if(current == nil) return;
+
     if([self didSongChange:current]) {
         if([self didCoverChange:current]) {
             [cache setValue:[player getCover]
-                     forKey:[self cacheKeyForCoverArt:current andPlayer:player]
+                     forKey:[self cacheKeyForCoverArt:current]
              withExpiration:current.duration * 2];
         } else {
             [cache setExpiration:current.duration * 2
-                          forKey:[self cacheKeyForCoverArt:current
-                                                 andPlayer:player]];
+                          forKey:[self cacheKeyForCoverArt:current]];
         }
-
-        [cache setValue:@true forKey:[self cacheKeyForSongChanged:player]];
-    } else {
-        [cache setValue:@false forKey:[self cacheKeyForSongChanged:player]];
     }
     last = current;
 }

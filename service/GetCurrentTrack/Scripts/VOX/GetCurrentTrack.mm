@@ -21,6 +21,7 @@ on getOrNull(value)
     end if
 end getOrNull
 
+with timeout of 0.5 seconds
 tell application "VOX"
     "artist: " & my getOrNull(artist) & "
 album: " & my getOrNull(album) & "
@@ -29,6 +30,7 @@ duration: " & total time as text & "
 name: " & my getOrNull(track) & "
 position: " & current time as text
 end tell
+end timeout
 )AS";
 
 
@@ -48,6 +50,9 @@ end tell
 - (SongMetadata*) currentTrack {
     NSAppleEventDescriptor* event = [script executeAndReturnError: nil];
     NSString* yaml = [event stringValue];
+    if(yaml == nil) {
+        return nil;
+    }
     NSDictionary* dict = pseudoYaml_parse(yaml);
     return [[SongMetadata alloc] initWithDict:dict];
 }

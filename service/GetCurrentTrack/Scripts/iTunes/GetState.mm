@@ -10,9 +10,11 @@
 
 static const char* code = R"AS(
 tell application "iTunes"
-    if running then
-        player state as text
-    end if
+    with timeout of 0.5 seconds
+        if running then
+            player state as text
+        end if
+    end timeout
 end tell
 )AS";
 

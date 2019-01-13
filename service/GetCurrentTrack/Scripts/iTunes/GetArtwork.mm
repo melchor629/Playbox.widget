@@ -10,10 +10,12 @@
 
 static const char* code = R"AS(
 tell application "iTunes"
-    set t to current track
-    if (count of artworks of t) is not 0 then
-        {format of artwork 1 of artworks of t, data of artwork 1 of artworks of t}
-    end if
+    with timeout of 0.5 seconds
+        set t to current track
+        if (count of artworks of t) is not 0 then
+            {format of artwork 1 of artworks of t, data of artwork 1 of artworks of t}
+        end if
+    end timeout
 end tell
 )AS";
 

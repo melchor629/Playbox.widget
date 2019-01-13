@@ -66,7 +66,8 @@ NSString* getBaseDirectory(NSString* extra);
                                                @"/player/(\\w+)/?",
                                                @"/player/(\\w+)/artwork/?",
                                                @"/players/?",
-                                               @"/quit/?"
+                                               @"/quit/?",
+                                               @"/artwork/([^/]+)/([^/]+)/?"
                                                ]
                                 andSelectors:@[
                                                @"requestAllPlayers:withResponse:",
@@ -74,7 +75,8 @@ NSString* getBaseDirectory(NSString* extra);
                                                @"requestPlayer:withResponse:",
                                                @"requestPlayerArtwork:withResponse:",
                                                @"requestListPlayers:withResponse:",
-                                               @"requestQuit:withResponse:"
+                                               @"requestQuit:withResponse:",
+                                               @"requestArtwork:withResponse:"
                                                ]];
     router.delegate = self;
 
@@ -106,24 +108,29 @@ NSString* getBaseDirectory(NSString* extra);
 }
 
 - (void) requestAllPlayers: (HTTPRequest*) req withResponse: (HTTPResponse*) res {
+    NSUInteger status = 200;
     Player* player = [self getPlayingPlayer];
     NSDictionary* dict = nil;
     if(player != nil) {
         SongMetadata* metadata = [cache songMetadataForPlayer:player];
-        id cover = [cache songCoverForPlayer:player];
-        bool songChanged = [cache songChangedForPlayer:player];
-        NSString* host = [req->headers valueForKey:@"Host"];
-        if(host == nil) {
-            host = [NSString stringWithFormat:@"[::1]:%u", PORT];
+        if(metadata != nil) {
+            id cover = [cache songCoverForPlayer:player];
+            NSString* host = [req->headers valueForKey:@"X-Forwarded-Host"];
+            if(host == nil) { host = [req->headers valueForKey:@"Host"]; }
+            NSString* prefix = [req->headers valueForKey:@"X-Forwarded-Prefix"];
+            dict = @{
+                     @"metadata": [metadata asDict],
+                     @"coverUrl": cover ? [self coverUrlFor: metadata withHost: host andPrefix: prefix] : [NSNull null],
+                     @"status": PlayerStatusNSString[[player status]],
+                     @"player": [player name]
+                     };
+        } else {
+            dict = @{
+                     @"error": @true,
+                     @"reason": [NSString stringWithFormat:@"Could not get metadata for player %@", [player name]]
+                     };
+            status = 500;
         }
-        NSString* coverUrl = [NSString stringWithFormat:@"http://%@/artwork", host];
-        dict = @{
-                 @"metadata": [metadata asDict],
-                 @"coverUrl": cover ? coverUrl : [NSNull null],
-                 @"songChanged": [NSNumber numberWithBool:songChanged],
-                 @"status": PlayerStatusNSString[[player status]],
-                 @"player": [player name]
-                 };
     } else {
         dict = @{ @"status": @"stopped" };
     }
@@ -131,26 +138,33 @@ NSString* getBaseDirectory(NSString* extra);
     [res setValue:@"application/json; encoding=utf-8" forHeader:@"Content-Type"];
     [res setValue:@"*" forHeader:@"Access-Control-Allow-Origin"];
 
-    [res writeJsonAndEnd:dict];
+    [res writeJsonAndEnd:dict withStatus: status];
 }
 
 - (void) requestAllPlayersArtwork: (HTTPRequest*) req withResponse: (HTTPResponse*) res {
     Player* player = [self getPlayingPlayer];
     if(player != nil) {
-        SongCover* cover = [cache songCoverForPlayer:player];
-        if(cover == nil) {
+        PlayerStatus status = [player status];
+        if(status == PlayerStatusClosed || status == PlayerStatusStopped) {
             res.statusCode = 400;
             [res end];
-        } else if([[cover type] isEqualToString:@"url"]) {
-            res.statusCode = 303;
-            [res setValue:[[NSString alloc] initWithData:cover.data encoding:NSUTF8StringEncoding]
-                forHeader:@"Location"];
-            [res end];
         } else {
-            [res setValue:@"no-store, must-revalidate" forHeader:@"Cache-Control"];
-            [res setValue:@"0" forHeader:@"Expires"];
-            [res setValue:cover.type forHeader:@"Content-Type"];
-            [res writeDataAndEnd:cover.data];
+            SongMetadata* metadata = [cache songMetadataForPlayer:player];
+            if(metadata != nil) {
+                NSString* host = [req->headers valueForKey:@"X-Forwarded-Host"];
+                if(host == nil) { host = [req->headers valueForKey:@"Host"]; }
+                NSString* prefix = [req->headers valueForKey:@"X-Forwarded-Prefix"];
+                res.statusCode = 307;
+                [res setValue:[self coverUrlFor:metadata withHost:host andPrefix:prefix]
+                    forHeader:@"Location"];
+                [res end];
+            } else {
+                [res writeJsonAndEnd:@{
+                                       @"error": @true,
+                                       @"reason": [NSString stringWithFormat:@"Could not get metadata for player %@", [player name]]
+                                       }
+                          withStatus:500];
+            }
         }
     } else {
         res.statusCode = 404;
@@ -174,20 +188,24 @@ NSString* getBaseDirectory(NSString* extra);
     PlayerStatus status = [player status];
     if(status != PlayerStatusClosed && status != PlayerStatusStopped) {
         SongMetadata* metadata = [cache songMetadataForPlayer:player];
-        id cover = [cache songCoverForPlayer:player];
-        bool songChanged = [cache songChangedForPlayer:player];
-        NSString* host = [req->req.headers valueForKey:@"Host"];
-        if(host == nil) {
-            host = [NSString stringWithFormat:@"[::1]:%u", PORT];
+        if(metadata != nil) {
+            id cover = [cache songCoverForPlayer:player];
+            NSString* host = [req->req.headers valueForKey:@"X-Forwarded-Host"];
+            if(host == nil) { host = [req->req.headers valueForKey:@"Host"]; }
+            NSString* prefix = [req->req.headers valueForKey:@"X-Forwarded-Prefix"];
+            [res writeJsonAndEnd:@{
+                                   @"metadata": [metadata asDict],
+                                   @"coverUrl": cover ? [self coverUrlFor: metadata withHost: host andPrefix: prefix] : [NSNull null],
+                                   @"status": PlayerStatusNSString[status],
+                                   @"player": [player name]
+                                   }];
+        } else {
+            [res writeJsonAndEnd:@{
+                                   @"error": @true,
+                                   @"reason": [NSString stringWithFormat:@"Could not get metadata for player %@", [player name]]
+                                   }
+                      withStatus:500];
         }
-        NSString* coverUrl = [NSString stringWithFormat:@"http://%@/player/%@/artwork", host, playerName];
-        [res writeJsonAndEnd:@{
-                               @"metadata": [metadata asDict],
-                               @"coverUrl": cover ? coverUrl : [NSNull null],
-                               @"songChanged": [NSNumber numberWithBool:songChanged],
-                               @"status": PlayerStatusNSString[status],
-                               @"player": [player name]
-                               }];
     } else {
         [res writeJsonAndEnd:@{ @"status": PlayerStatusNSString[status], @"player": [player name] }];
     }
@@ -211,21 +229,44 @@ NSString* getBaseDirectory(NSString* extra);
         res.statusCode = 400;
         [res end];
     } else {
-        SongCover* cover = [cache songCoverForPlayer:player];
-        if(cover == nil) {
-            res.statusCode = 400;
-            [res end];
-        } else if([[cover type] isEqualToString:@"url"]) {
-            res.statusCode = 303;
-            [res setValue:[[NSString alloc] initWithData:cover.data encoding:NSUTF8StringEncoding]
+        SongMetadata* metadata = [cache songMetadataForPlayer:player];
+        if(metadata != nil) {
+            NSString* host = [req->req.headers valueForKey:@"X-Forwarded-Host"];
+            if(host == nil) { host = [req->req.headers valueForKey:@"Host"]; }
+            NSString* prefix = [req->req.headers valueForKey:@"X-Forwarded-Prefix"];
+            res.statusCode = 307;
+            [res setValue:[self coverUrlFor:metadata withHost:host andPrefix:prefix]
                 forHeader:@"Location"];
             [res end];
         } else {
-            [res setValue:@"no-store, must-revalidate" forHeader:@"Cache-Control"];
-            [res setValue:@"0" forHeader:@"Expires"];
-            [res setValue:cover.type forHeader:@"Content-Type"];
-            [res writeDataAndEnd:cover.data];
+            [res writeJsonAndEnd:@{
+                                   @"error": @true,
+                                   @"reason": [NSString stringWithFormat:@"Could not get metadata for player %@", [player name]]
+                                   }
+                      withStatus:500];
         }
+    }
+}
+
+- (void) requestArtwork: (PathRequest*) req withResponse: (HTTPResponse*) res {
+    NSString* album = [req->params objectAtIndex:0];
+    NSString* artist = [req->params objectAtIndex:1];
+
+    SongMetadata* metadata = [[SongMetadata alloc] initWithAlbum: album andArtist: artist];
+    SongCover* cover = [cache songCoverForMetadata: metadata];
+    if(cover == nil) {
+        res.statusCode = 400;
+        [res end];
+    } else if([[cover type] isEqualToString:@"url"]) {
+        res.statusCode = 307;
+        [res setValue:[[NSString alloc] initWithData:cover.data encoding:NSUTF8StringEncoding]
+            forHeader:@"Location"];
+        [res end];
+    } else {
+        [res setValue:@"no-store, must-revalidate" forHeader:@"Cache-Control"];
+        [res setValue:@"0" forHeader:@"Expires"];
+        [res setValue:cover.type forHeader:@"Content-Type"];
+        [res writeDataAndEnd:cover.data];
     }
 }
 
@@ -257,6 +298,28 @@ NSString* getBaseDirectory(NSString* extra);
     [[NSFileManager defaultManager] removeItemAtPath:pidFilePath error:nil];
     [server close];
     NSLog(@"Closing daemon...");
+}
+
+- (NSString*) coverUrlFor: (SongMetadata*) metadata withHost: (NSString* __nullable) host andPrefix: (NSString* __nullable) prefix {
+    NSMutableString* coverUrl = [[NSMutableString alloc] initWithString:@"http://"];
+    if(host != nil) {
+        [coverUrl appendString:host];
+    } else {
+        [coverUrl appendFormat:@"localhost:%u", PORT];
+    }
+    if(prefix != nil) {
+        [coverUrl appendString:prefix];
+    }
+    NSString* album = metadata.album != nil ? metadata.album : @"unknown";
+    NSString* artist = metadata.albumArtist != nil ? metadata.albumArtist : (metadata.artist ? metadata.artist : @"unknown");
+    album = [self appUrlEncode: album];
+    artist = [self appUrlEncode: artist];
+    [coverUrl appendFormat: @"/artwork/%@/%@", album, artist];
+    return coverUrl;
+}
+
+- (NSString*) appUrlEncode: (NSString*) string {
+    return [[string stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLPathAllowedCharacterSet] stringByReplacingOccurrencesOfString:@"/" withString:@"%2F"];
 }
 
 @end

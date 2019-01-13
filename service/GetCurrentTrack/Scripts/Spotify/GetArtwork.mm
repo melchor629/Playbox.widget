@@ -10,7 +10,9 @@
 
 static const char* code = R"AS(
 tell application "Spotify"
-    artwork url of current track
+    with timeout of 0.5 seconds
+        artwork url of current track
+    end timeout
 end tell
 )AS";
 

@@ -38,6 +38,15 @@
     return [super init];
 }
 
+- (instancetype _Nonnull) initWithAlbum: (NSString* _Nonnull) _album andArtist: (NSString* _Nonnull) _artist {
+    self = [super init];
+
+    album = _album;
+    artist = _artist;
+
+    return self;
+}
+
 - (instancetype) initWithDict: (NSDictionary*) dict {
     self = [super init];
 

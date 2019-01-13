@@ -54,10 +54,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (SongCover* _Nullable) songCoverForPlayer: (Player*) player;
 
 /*!
- @brief Tells if within the last second, the song has changed.
- @return true if the song has changed recently, false otherwise.
+ @brief Gets the cover for the album and artist given in the metadata.
+ @discussion
+ Gets the cover, if it has one, for the metadata. Gets the cover
+ from the in-memory cache. If there's no entry for the given metadata
+ in the cache, it returns nil.
+ @note
+ It does not request the cover to any player.
+ @param metadata Metadata to look for the cover in the cache.
+ @return The song cover for the metadata, if any.
  */
-- (bool) songChangedForPlayer: (Player*) player;
+- (SongCover* _Nullable) songCoverForMetadata: (SongMetadata*) metadata;
 
 @end
 

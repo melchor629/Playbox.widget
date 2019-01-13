@@ -10,9 +10,11 @@
 
 static const char* code = R"AS(
 tell application "VOX"
-    if running then
-        player state
-    end if
+    with timeout of 0.5 seconds
+        if running then
+            player state
+        end if
+    end timeout
 end tell
 )AS";
 

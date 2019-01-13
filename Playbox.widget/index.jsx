@@ -33,7 +33,7 @@ const options = {
 export const initialState = { status: 'stopped' };
 
 export const command = (dispatch) => {
-  let url = 'http://127.0.0.1:45987';
+  let url = 'http://[::1]:45988';
   if(options.playerApp) {
     url = `${url}/player/${options.playerApp}`
   }
@@ -42,16 +42,27 @@ export const command = (dispatch) => {
     dispatch({ type: 'UPDATED_PLAYER_INFO', data });
   };
 
-  fetch(`http://127.0.0.1:41417/${url}`)
+  const notok = (error) => {
+    dispatch({ type:'UPDATED_PLAYER_INFO_ERROR', error });
+  }
+
+  fetch(url)
     .then((res) => {
       if(!res.ok) {
-        throw res;
+        res.json().then(data => {
+          if(data.error) {
+            console.error(data);
+            dispatch({ type: 'HIDE_METADATA' });
+          } else {
+            throw res;
+          }
+        }).catch(e => notok(e));
       } else {
-        return res.json();
+        res.json()
+          .then((data) => ok(data))
+          .catch((error) => notok(error));
       }
-    })
-    .then((data) => ok(data))
-    .catch((error) => dispatch({ type:'UPDATED_PLAYER_INFO_ERROR', error }));
+    }).catch((error) => notok(error));
 };
 
 
@@ -295,6 +306,14 @@ export const styles = (() => {
 })();
 
 
+const hasMetadataUpdated = (current, previous) => (
+  (!current && previous) ||
+  (current && !previous) ||
+  current.name !== previous.name ||
+  (current.albumArtist || current.artist) !== (previous.albumArtist || previous.artist) ||
+  current.album !== previous.album
+);
+
 export const updateState = (event, previousState) => {
   switch(event.type) {
     case 'UPDATED_PLAYER_INFO_ERROR': {
@@ -310,7 +329,6 @@ export const updateState = (event, previousState) => {
         },
         coverUrl: "/Playbox.widget/lib/default.png",
         player: "Nothing",
-        songChanged: true,
         showMetadata: true,
         previousState: undefined,
       };
@@ -324,7 +342,9 @@ export const updateState = (event, previousState) => {
           previousState: previousState.previousState ? previousState.previousState : previousState,
         };
       } else {
-        const shouldShowMetadata = event.data.songChanged && options.metaPosition === 'inside' && options.widgetVariant !== 'small';
+        const shouldShowMetadata = options.metaPosition === 'inside' &&
+          options.widgetVariant !== 'small' &&
+          hasMetadataUpdated(event.data.metadata, previousState.metadata);
         return {
           ...previousState,
           ...event.data,
@@ -377,8 +397,8 @@ export const render = ({ status, metadata, coverUrl, showMetadata, previousState
   let hide = false;
 
   if(status !== 'playing') {
-    meta = previousState.metadata;
-    cover = previousState.coverUrl;
+    meta = previousState ? previousState.metadata : undefined;
+    cover = previousState ? previousState.coverUrl : undefined;
     hide = true;
   }
 
@@ -397,7 +417,7 @@ export const render = ({ status, metadata, coverUrl, showMetadata, previousState
     <div className={ `${styles} ${hide ? 'hide' : ''}` }>
       <div className="wrapper">
         <ProgressBar progress={ progress } />
-        <Art coverUrl={ cover } loved= { metadata.loved } />
+        <Art coverUrl={ cover } loved={ meta.loved } />
         <Metadata show={ showMetadata } metadata={ meta } />
       </div>
     </div>

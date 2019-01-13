@@ -70,7 +70,9 @@
             if([delegate respondsToSelector:selector]) {
                 NSMutableArray* params = [[NSMutableArray alloc] init];
                 for(NSUInteger i = 1; i < [res numberOfRanges]; i++) {
-                    [params addObject:[path substringWithRange:[res rangeAtIndex:i]]];
+                    NSString* parameter = [path substringWithRange:[res rangeAtIndex:i]];
+                    parameter = [parameter stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                    [params addObject:parameter];
                 }
 
                 PathRequest pr;

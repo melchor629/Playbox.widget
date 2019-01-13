@@ -40,10 +40,11 @@ adding an instance of it in the array of [GetCurrentTrackApp.m:38][4].
 ## API
 
  - `/`: Gets the current playing song of any of the players
- - `/artwork`: Gets the artwork of the playing song or HTTP status 404 if there's no one
- - `/player/:playerName`: Gets the current playing song for the desired player (name case insensitive).
- - `/player/:playerName/artwork`: Gets the artwork of the desired player or HTTP status 404 if there's no one.
+ - `/artwork`: Redirects to the artwork endpoint, only if there's a player playing a song, also puts in the cache the artwork
+ - `/player/:playerName`: Gets the current playing song for the desired player (name case insensitive)
+ - `/player/:playerName/artwork`: Redirects to the artwork endpoint, only if the player is playing a song, also puts in the cache the artwork
  - `/players`: Gets a list of available players and their status.
+ - `/artwork/:album/:artist/?`: Retreives the cover art for the album and artist (or album artist) given, if available in the cache
  - `/quit`: After 0.5s, the server/daemon will close.
 
 

@@ -44,6 +44,7 @@
 
 - (instancetype _Nonnull) init;
 - (instancetype _Nonnull) initWithDict: (NSDictionary* _Nonnull) dict;
+- (instancetype _Nonnull) initWithAlbum: (NSString* _Nonnull) album andArtist: (NSString* _Nonnull) artist;
 - (NSDictionary* _Nonnull) asDict;
 @end
 
