@@ -22,7 +22,7 @@ This widget shows currently played song in either iTunes or Spotify. It has a sp
 - Uses less CPU than original.
 - Uses a background service to detect song information. [See more](https://github.com/melchor629/Playbox.widget/blob/master/service/README.md)
 
- > Note for Mojave (10.14): the new permission system makes the background service to not have permission to access the play status of the players. When the service tryies to fetch the status, a system popup will show asking you if you allow the service to read the player status. The app only queries the status player, but nothing more.
+ > Note for Mojave (10.14): the new permission system makes the background service to not have permission to access the play status of the players. When the service tries to fetch the status, a system popup will show asking you if you allow the service to read the player status. The app only queries the status player, but nothing more.
 
 # How to install
 
