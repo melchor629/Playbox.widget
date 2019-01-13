@@ -33,7 +33,7 @@ const options = {
 export const initialState = { status: 'stopped' };
 
 export const command = (dispatch) => {
-  let url = 'http://[::1]:45988';
+  let url = 'http://[::1]:45987';
   if(options.playerApp) {
     url = `${url}/player/${options.playerApp}`
   }
@@ -391,6 +391,10 @@ const ProgressBar = ({ progress }) => (
   <div className="progress" style={{ width: `${progress}%` }} />
 );
 
+const FullWindowContainer = ({ children }) => (
+  <div style={{ width: '100vh', height: '100vh' }}>{children}</div>
+);
+
 export const render = ({ status, metadata, coverUrl, showMetadata, previousState }) => {
   let meta = metadata;
   let cover = coverUrl;
@@ -414,12 +418,14 @@ export const render = ({ status, metadata, coverUrl, showMetadata, previousState
   cover = cover || `http://${location.host}/Playbox.widget/lib/default.png`;
 
   return (
-    <div className={ `${styles} ${hide ? 'hide' : ''}` }>
-      <div className="wrapper">
-        <ProgressBar progress={ progress } />
-        <Art coverUrl={ cover } loved={ meta.loved } />
-        <Metadata show={ showMetadata } metadata={ meta } />
+    <FullWindowContainer>
+      <div className={ `${styles} ${hide ? 'hide' : ''}` }>
+        <div className="wrapper">
+          <ProgressBar progress={ progress } />
+          <Art coverUrl={ cover } loved={ meta.loved } />
+          <Metadata show={ showMetadata } metadata={ meta } />
+        </div>
       </div>
-    </div>
+    </FullWindowContainer>
   );
 };
