@@ -15,6 +15,7 @@
 #import "Players/SpotifyPlayer.h"
 #import "Players/iTunesPlayer.h"
 #import "Players/VOXPlayer.h"
+#import "Players/MusicPlayer.h"
 
 
 NSString* getBaseDirectory(NSString* extra);
@@ -38,7 +39,8 @@ NSString* getBaseDirectory(NSString* extra);
     players = @[
                [[SpotifyPlayer alloc] init],
                [[iTunesPlayer alloc] init],
-               [[VOXPlayer alloc] init]
+               [[VOXPlayer alloc] init],
+               [[MusicPlayer alloc] init],
                ];
 
     pidFilePath = getBaseDirectory(@"Playbox.widget/lib/pidfile");

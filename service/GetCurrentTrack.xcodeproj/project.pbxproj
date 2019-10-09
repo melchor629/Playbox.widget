@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		4804FD241FFE61C000819901 /* GetCurrentTrackApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */; };
+		4813171A234E7B0700D21C97 /* MusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 48131719234E7B0700D21C97 /* MusicPlayer.m */; };
+		48131722234E7BC000D21C97 /* GetState.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4813171F234E7BC000D21C97 /* GetState.mm */; };
+		48131723234E7BC000D21C97 /* GetCurrentTrack.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48131720234E7BC000D21C97 /* GetCurrentTrack.mm */; };
+		48131724234E7BC000D21C97 /* GetArtwork.mm in Sources */ = {isa = PBXBuildFile; fileRef = 48131721234E7BC000D21C97 /* GetArtwork.mm */; };
 		485716781FFC2A9C00C2AE7F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 485716771FFC2A9C00C2AE7F /* main.m */; };
 		485716891FFC306B00C2AE7F /* SpotifyPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 485716881FFC306B00C2AE7F /* SpotifyPlayer.m */; };
 		4857168C1FFC4BC100C2AE7F /* iTunesPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4857168B1FFC4BC100C2AE7F /* iTunesPlayer.m */; };
@@ -48,6 +52,14 @@
 /* Begin PBXFileReference section */
 		4804FD221FFE61C000819901 /* GetCurrentTrackApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetCurrentTrackApp.h; sourceTree = "<group>"; };
 		4804FD231FFE61C000819901 /* GetCurrentTrackApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GetCurrentTrackApp.m; sourceTree = "<group>"; };
+		48131718234E7B0700D21C97 /* MusicPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MusicPlayer.h; sourceTree = "<group>"; };
+		48131719234E7B0700D21C97 /* MusicPlayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MusicPlayer.m; sourceTree = "<group>"; };
+		4813171C234E7BC000D21C97 /* GetArtwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetArtwork.h; sourceTree = "<group>"; };
+		4813171D234E7BC000D21C97 /* GetState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetState.h; sourceTree = "<group>"; };
+		4813171E234E7BC000D21C97 /* GetCurrentTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetCurrentTrack.h; sourceTree = "<group>"; };
+		4813171F234E7BC000D21C97 /* GetState.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GetState.mm; sourceTree = "<group>"; };
+		48131720234E7BC000D21C97 /* GetCurrentTrack.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GetCurrentTrack.mm; sourceTree = "<group>"; };
+		48131721234E7BC000D21C97 /* GetArtwork.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GetArtwork.mm; sourceTree = "<group>"; };
 		485716741FFC2A9C00C2AE7F /* GetCurrentTrack */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GetCurrentTrack; sourceTree = BUILT_PRODUCTS_DIR; };
 		485716771FFC2A9C00C2AE7F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		485716861FFC2EC900C2AE7F /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
@@ -106,6 +118,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4813171B234E7B6A00D21C97 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				4813171C234E7BC000D21C97 /* GetArtwork.h */,
+				48131721234E7BC000D21C97 /* GetArtwork.mm */,
+				4813171E234E7BC000D21C97 /* GetCurrentTrack.h */,
+				48131720234E7BC000D21C97 /* GetCurrentTrack.mm */,
+				4813171D234E7BC000D21C97 /* GetState.h */,
+				4813171F234E7BC000D21C97 /* GetState.mm */,
+			);
+			path = Music;
+			sourceTree = "<group>";
+		};
 		4857166B1FFC2A9B00C2AE7F = {
 			isa = PBXGroup;
 			children = (
@@ -157,6 +182,8 @@
 				4857168B1FFC4BC100C2AE7F /* iTunesPlayer.m */,
 				4857168D1FFC549100C2AE7F /* VOXPlayer.h */,
 				4857168E1FFC549100C2AE7F /* VOXPlayer.m */,
+				48131718234E7B0700D21C97 /* MusicPlayer.h */,
+				48131719234E7B0700D21C97 /* MusicPlayer.m */,
 			);
 			path = Players;
 			sourceTree = "<group>";
@@ -192,6 +219,7 @@
 		48F7F6D0216D2C580030B45F /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
+				4813171B234E7B6A00D21C97 /* Music */,
 				48F7F6E0216D58EA0030B45F /* VOX */,
 				48F7F6DF216D517F0030B45F /* Spotify */,
 				48F7F6D7216D2D4A0030B45F /* iTunes */,
@@ -296,6 +324,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4813171A234E7B0700D21C97 /* MusicPlayer.m in Sources */,
+				48131723234E7BC000D21C97 /* GetCurrentTrack.mm in Sources */,
 				485D3AFC216E4860002986AF /* HTTPResponse.m in Sources */,
 				48F7F6F0216D5CE20030B45F /* GetState.mm in Sources */,
 				4857168F1FFC549100C2AE7F /* VOXPlayer.m in Sources */,
@@ -307,6 +337,7 @@
 				485D3AF6216E25B5002986AF /* ClientSocket.m in Sources */,
 				4804FD241FFE61C000819901 /* GetCurrentTrackApp.m in Sources */,
 				485D3AF3216E2538002986AF /* ServerSocket.m in Sources */,
+				48131722234E7BC000D21C97 /* GetState.mm in Sources */,
 				485D3AF9216E344D002986AF /* HTTPServer.m in Sources */,
 				48F7F6DE216D4CBF0030B45F /* Player.m in Sources */,
 				485716891FFC306B00C2AE7F /* SpotifyPlayer.m in Sources */,
@@ -316,6 +347,7 @@
 				48F7F6D3216D2CDD0030B45F /* GetCurrentTrack.mm in Sources */,
 				48F7F6F1216D5CE20030B45F /* GetArtwork.mm in Sources */,
 				48F7F6E9216D593A0030B45F /* GetArtwork.mm in Sources */,
+				48131724234E7BC000D21C97 /* GetArtwork.mm in Sources */,
 				48F7F6DA216D2F660030B45F /* GetState.mm in Sources */,
 				4874BA8A2172213C00AAAAC0 /* GetCurrentTrackCache.m in Sources */,
 				48F7F6E8216D593A0030B45F /* GetCurrentTrack.mm in Sources */,
